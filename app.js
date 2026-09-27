@@ -18,12 +18,12 @@ const defaultData = {
     },
     passengers: [
       { name: 'Francisco José Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Lizara Cerrudo', type: 'Bebé', baggage: 'Bebé (2 piezas gratis: carrito + elevador)' },
       { name: 'Aroa Rodríguez González', type: 'Adulto', baggage: '20 kg Facturado' },
       { name: 'Francisco José Cerrudo Alonso', type: 'Adulto', baggage: '20 kg Facturado' },
       { name: 'Ana Cristina Menjíbar García', type: 'Adulto', baggage: '20 kg Facturado' },
       { name: 'Álvaro Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Lorena Abarca', type: 'Adulto', baggage: '20 kg Facturado' }
+      { name: 'Lorena Abarca', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Lizara Cerrudo', type: 'Bebé', baggage: 'Bebé (2 piezas gratis: carrito + elevador)' }
     ],
     flights: {
       airline: 'Ryanair',
