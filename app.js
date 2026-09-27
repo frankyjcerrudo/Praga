@@ -17,9 +17,33 @@ const defaultData = {
       notes: 'Check-in: 14:00 | Desayuno incluido. Cuna para niños disponible. A 5 min de la Plaza de la Ciudad Vieja.'
     },
     flights: {
-      outbound: 'Vuelo Ida: 07:15 - Llegada Praga (PRG Terminal 2) 10:10',
-      inbound: 'Vuelo Vuelta: Praga (PRG Terminal 2) 18:40 - Llegada 21:35',
-      transfer: 'Desde Aeropuerto: Autobús 119 hasta estación Nádraží Veleslavín (Metro Línea A verde). O pedir Bolt/Uber (~450-550 CZK).'
+      airline: 'Ryanair',
+      bookingRef: 'ABC123',
+      outbound: {
+        flightNo: 'FR 2056',
+        origCode: 'MAD',
+        origName: 'Madrid (Barajas T1)',
+        destCode: 'PRG',
+        destName: 'Praga (Václav Havel T2)',
+        date: 'Viernes, 16 Oct',
+        depTime: '06:45',
+        arrTime: '09:40',
+        seats: '18A, 18B, 18C',
+        terminal: 'T1 → T2 (Praga)'
+      },
+      inbound: {
+        flightNo: 'FR 2057',
+        origCode: 'PRG',
+        origName: 'Praga (Václav Havel T2)',
+        destCode: 'MAD',
+        destName: 'Madrid (Barajas T1)',
+        date: 'Lunes, 19 Oct',
+        depTime: '17:20',
+        arrTime: '20:30',
+        seats: '18A, 18B, 18C',
+        terminal: 'T2 (Praga) → T1'
+      },
+      transfer: 'Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min). O pedir Bolt/Uber (~450-550 CZK).'
     },
     exchangeRate: 25.20
   },
@@ -422,7 +446,11 @@ function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
-      return { ...defaultData, ...JSON.parse(saved) };
+      const parsed = JSON.parse(saved);
+      if (parsed.trip && parsed.trip.flights && typeof parsed.trip.flights.outbound === 'string') {
+        parsed.trip.flights = defaultData.trip.flights;
+      }
+      return { ...defaultData, ...parsed };
     } catch (e) {
       console.warn('Error loading state, using defaults', e);
     }
@@ -872,11 +900,67 @@ window.speakText = function(text) {
 };
 
 // ==========================================================================
+// INDEXEDDB FOR OFFLINE BOARDING PASSES (IMAGES & PDFS)
+// ==========================================================================
+const IDB_NAME = 'PragaFamiliaPassesDB';
+const IDB_VERSION = 1;
+const IDB_STORE = 'boarding_passes';
+
+function getDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(IDB_NAME, IDB_VERSION);
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function dbSavePass(pass) {
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    store.put(pass);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function dbGetAllPasses() {
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const store = tx.objectStore(IDB_STORE);
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result || []);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function dbDeletePass(id) {
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    store.delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+// ==========================================================================
 // 4. RESERVAS & DOCUMENTOS TAB
 // ==========================================================================
 function initBookings() {
   renderBookings();
+  renderBoardingPasses();
 
+  // Hotel Modal
   const btnEditHotel = document.getElementById('btn-edit-hotel');
   const modalHotel = document.getElementById('modal-edit-hotel');
   const formHotel = document.getElementById('form-edit-hotel');
@@ -913,6 +997,145 @@ function initBookings() {
     });
   }
 
+  // Flights Modal & Copy PNR
+  const btnCopyPnr = document.getElementById('btn-copy-pnr');
+  if (btnCopyPnr) {
+    btnCopyPnr.addEventListener('click', () => {
+      const pnr = appState.trip.flights.bookingRef || 'ABC123';
+      navigator.clipboard.writeText(pnr);
+      showToast(`¡Localizador ${pnr} copiado!`);
+    });
+  }
+
+  const btnEditFlights = document.getElementById('btn-edit-flights');
+  const modalFlights = document.getElementById('modal-edit-flights');
+  const formFlights = document.getElementById('form-edit-flights');
+  const cancelFlightsBtn = document.getElementById('btn-cancel-flights');
+
+  if (btnEditFlights && modalFlights) {
+    btnEditFlights.addEventListener('click', () => {
+      const f = appState.trip.flights;
+      document.getElementById('edit-flight-pnr').value = f.bookingRef || '';
+      
+      const out = f.outbound || {};
+      document.getElementById('edit-out-no').value = out.flightNo || '';
+      document.getElementById('edit-out-date').value = out.date || '';
+      document.getElementById('edit-out-orig').value = out.origName || out.origCode || '';
+      document.getElementById('edit-out-dest').value = out.destName || out.destCode || '';
+      document.getElementById('edit-out-dep').value = out.depTime || '';
+      document.getElementById('edit-out-arr').value = out.arrTime || '';
+      document.getElementById('edit-out-seats').value = out.seats || '';
+
+      const ret = f.inbound || {};
+      document.getElementById('edit-in-no').value = ret.flightNo || '';
+      document.getElementById('edit-in-date').value = ret.date || '';
+      document.getElementById('edit-in-orig').value = ret.origName || ret.origCode || '';
+      document.getElementById('edit-in-dest').value = ret.destName || ret.destCode || '';
+      document.getElementById('edit-in-dep').value = ret.depTime || '';
+      document.getElementById('edit-in-arr').value = ret.arrTime || '';
+      document.getElementById('edit-in-seats').value = ret.seats || '';
+
+      modalFlights.showModal();
+    });
+  }
+
+  if (cancelFlightsBtn && modalFlights) {
+    cancelFlightsBtn.addEventListener('click', () => modalFlights.close());
+  }
+
+  if (formFlights && modalFlights) {
+    formFlights.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = appState.trip.flights;
+      f.bookingRef = document.getElementById('edit-flight-pnr').value.trim();
+
+      f.outbound.flightNo = document.getElementById('edit-out-no').value.trim();
+      f.outbound.date = document.getElementById('edit-out-date').value.trim();
+      const outOrig = document.getElementById('edit-out-orig').value.trim();
+      f.outbound.origName = outOrig;
+      f.outbound.origCode = outOrig.slice(0, 3).toUpperCase();
+      const outDest = document.getElementById('edit-out-dest').value.trim();
+      f.outbound.destName = outDest;
+      f.outbound.destCode = outDest.slice(0, 3).toUpperCase();
+      f.outbound.depTime = document.getElementById('edit-out-dep').value;
+      f.outbound.arrTime = document.getElementById('edit-out-arr').value;
+      f.outbound.seats = document.getElementById('edit-out-seats').value.trim();
+
+      f.inbound.flightNo = document.getElementById('edit-in-no').value.trim();
+      f.inbound.date = document.getElementById('edit-in-date').value.trim();
+      const inOrig = document.getElementById('edit-in-orig').value.trim();
+      f.inbound.origName = inOrig;
+      f.inbound.origCode = inOrig.slice(0, 3).toUpperCase();
+      const inDest = document.getElementById('edit-in-dest').value.trim();
+      f.inbound.destName = inDest;
+      f.inbound.destCode = inDest.slice(0, 3).toUpperCase();
+      f.inbound.depTime = document.getElementById('edit-in-dep').value;
+      f.inbound.arrTime = document.getElementById('edit-in-arr').value;
+      f.inbound.seats = document.getElementById('edit-in-seats').value.trim();
+
+      saveState();
+      renderBookings();
+      modalFlights.close();
+      showToast('Datos de vuelos actualizados ✈️');
+    });
+  }
+
+  // Boarding Passes Upload & Modal
+  const btnAddBp = document.getElementById('btn-add-boarding-pass');
+  const modalAddBp = document.getElementById('modal-add-boarding-pass');
+  const formAddBp = document.getElementById('form-add-boarding-pass');
+  const cancelBpBtn = document.getElementById('btn-cancel-bp');
+
+  if (btnAddBp && modalAddBp) {
+    btnAddBp.addEventListener('click', () => modalAddBp.showModal());
+  }
+
+  if (cancelBpBtn && modalAddBp) {
+    cancelBpBtn.addEventListener('click', () => modalAddBp.close());
+  }
+
+  if (formAddBp && modalAddBp) {
+    formAddBp.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const passenger = document.getElementById('bp-passenger-input').value.trim();
+      const flightType = document.getElementById('bp-flight-type').value;
+      const fileInput = document.getElementById('bp-file-input');
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Por favor selecciona una imagen o PDF.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = async (event) => {
+        const dataUrl = event.target.result;
+        const newPass = {
+          id: 'bp-' + Date.now(),
+          passenger: passenger,
+          flightType: flightType,
+          fileName: file.name,
+          fileType: file.type,
+          dataUrl: dataUrl,
+          dateAdded: new Date().toLocaleDateString('es-ES')
+        };
+
+        try {
+          await dbSavePass(newPass);
+          modalAddBp.close();
+          formAddBp.reset();
+          await renderBoardingPasses();
+          showToast(`¡Tarjeta de ${passenger} guardada offline! 🎟️`);
+        } catch (err) {
+          alert('Error guardando la tarjeta en el dispositivo.');
+        }
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
   // Backup / Export
   const btnExport = document.getElementById('btn-export-plan');
   if (btnExport) {
@@ -935,7 +1158,7 @@ function initBookings() {
 
 function renderBookings() {
   const h = appState.trip.hotel;
-  const f = appState.trip.flights;
+  const f = appState.trip.flights || {};
 
   const hName = document.getElementById('hotel-name-val');
   const hAddress = document.getElementById('hotel-address-val');
@@ -949,14 +1172,6 @@ function renderBookings() {
   if (hRef) hRef.textContent = h.bookingRef;
   if (hNotes) hNotes.textContent = h.notes;
 
-  const fOut = document.getElementById('flight-out-val');
-  const fIn = document.getElementById('flight-in-val');
-  const fTrans = document.getElementById('flight-trans-val');
-
-  if (fOut) fOut.textContent = f.outbound;
-  if (fIn) fIn.textContent = f.inbound;
-  if (fTrans) fTrans.textContent = f.transfer;
-
   const btnMapsHotel = document.getElementById('btn-hotel-maps');
   if (btnMapsHotel) {
     btnMapsHotel.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.name + ' ' + h.address)}`;
@@ -966,7 +1181,168 @@ function renderBookings() {
   if (btnCallHotel) {
     btnCallHotel.href = `tel:${h.phone.replace(/\s+/g, '')}`;
   }
+
+  // Render Ryanair Flights
+  const pnrEl = document.getElementById('flight-pnr-val');
+  if (pnrEl) pnrEl.textContent = f.bookingRef || 'ABC123';
+
+  // Outbound
+  const out = f.outbound || {};
+  const elOutNo = document.getElementById('flight-out-no');
+  const elOutOrigCode = document.getElementById('flight-out-orig-code');
+  const elOutOrigName = document.getElementById('flight-out-orig-name');
+  const elOutDepTime = document.getElementById('flight-out-dep-time');
+  const elOutDate = document.getElementById('flight-out-date');
+  const elOutDestCode = document.getElementById('flight-out-dest-code');
+  const elOutDestName = document.getElementById('flight-out-dest-name');
+  const elOutArrTime = document.getElementById('flight-out-arr-time');
+  const elOutSeats = document.getElementById('flight-out-seats');
+  const elOutTerminal = document.getElementById('flight-out-terminal');
+
+  if (elOutNo) elOutNo.textContent = out.flightNo || 'FR 2056';
+  if (elOutOrigCode) elOutOrigCode.textContent = out.origCode || 'MAD';
+  if (elOutOrigName) elOutOrigName.textContent = out.origName || 'Madrid';
+  if (elOutDepTime) elOutDepTime.textContent = out.depTime || '06:45';
+  if (elOutDate) elOutDate.textContent = out.date || 'Viernes';
+  if (elOutDestCode) elOutDestCode.textContent = out.destCode || 'PRG';
+  if (elOutDestName) elOutDestName.textContent = out.destName || 'Praga';
+  if (elOutArrTime) elOutArrTime.textContent = out.arrTime || '09:40';
+  if (elOutSeats) elOutSeats.textContent = out.seats || 'Por asignar';
+  if (elOutTerminal) elOutTerminal.textContent = out.terminal || 'T1 → T2 (Praga)';
+
+  // Inbound
+  const ret = f.inbound || {};
+  const elInNo = document.getElementById('flight-in-no');
+  const elInOrigCode = document.getElementById('flight-in-orig-code');
+  const elInOrigName = document.getElementById('flight-in-orig-name');
+  const elInDepTime = document.getElementById('flight-in-dep-time');
+  const elInDate = document.getElementById('flight-in-date');
+  const elInDestCode = document.getElementById('flight-in-dest-code');
+  const elInDestName = document.getElementById('flight-in-dest-name');
+  const elInArrTime = document.getElementById('flight-in-arr-time');
+  const elInSeats = document.getElementById('flight-in-seats');
+  const elInTerminal = document.getElementById('flight-in-terminal');
+
+  if (elInNo) elInNo.textContent = ret.flightNo || 'FR 2057';
+  if (elInOrigCode) elInOrigCode.textContent = ret.origCode || 'PRG';
+  if (elInOrigName) elInOrigName.textContent = ret.origName || 'Praga';
+  if (elInDepTime) elInDepTime.textContent = ret.depTime || '17:20';
+  if (elInDate) elInDate.textContent = ret.date || 'Lunes';
+  if (elInDestCode) elInDestCode.textContent = ret.destCode || 'MAD';
+  if (elInDestName) elInDestName.textContent = ret.destName || 'Madrid';
+  if (elInArrTime) elInArrTime.textContent = ret.arrTime || '20:30';
+  if (elInSeats) elInSeats.textContent = ret.seats || 'Por asignar';
+  if (elInTerminal) elInTerminal.textContent = ret.terminal || 'T2 (Praga) → T1';
+
+  const fTrans = document.getElementById('flight-trans-val');
+  if (fTrans) fTrans.textContent = f.transfer || 'Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min).';
 }
+
+async function renderBoardingPasses() {
+  const container = document.getElementById('boarding-passes-list');
+  if (!container) return;
+
+  try {
+    const passes = await dbGetAllPasses();
+
+    if (passes.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 18px; background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); color: var(--text-muted); font-size: 0.82rem;">
+          <span>✈️ No has añadido tarjetas de embarque aún. Cuando hagas el check-in en Ryanair, haz una captura de pantalla del código QR o sube el PDF para tenerlo sin conexión.</span>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = passes.map(pass => {
+      const isPdf = pass.fileType === 'application/pdf';
+      const previewThumb = isPdf
+        ? `<div class="bp-pdf-icon">PDF</div>`
+        : `<img src="${pass.dataUrl}" alt="QR" class="bp-thumb">`;
+
+      return `
+        <div class="boarding-pass-item" data-id="${pass.id}">
+          <div class="bp-top">
+            <div class="bp-passenger-name">
+              <span>👤</span> ${pass.passenger}
+            </div>
+            <span class="bp-flight-tag">${pass.flightType}</span>
+          </div>
+
+          <div class="bp-preview-wrap" onclick="viewBoardingPass('${pass.id}')">
+            ${previewThumb}
+            <div style="display: flex; flex-direction: column; overflow: hidden;">
+              <span style="font-size: 0.84rem; font-weight: 600; color: #fff; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">${pass.fileName}</span>
+              <span style="font-size: 0.72rem; color: var(--accent-emerald);">🟢 Guardado offline</span>
+            </div>
+          </div>
+
+          <div class="bp-actions">
+            <button class="btn-sm btn-sm-primary" style="flex: 1; justify-content: center;" onclick="viewBoardingPass('${pass.id}')">
+              🔍 Ver / Escanear
+            </button>
+            <a href="${pass.dataUrl}" download="${pass.fileName}" class="btn-sm" style="padding: 4px 10px;" title="Descargar archivo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+            <button class="btn-sm" style="color: #f87171; padding: 4px 8px;" onclick="removeBoardingPass('${pass.id}')" title="Eliminar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('Error loading boarding passes', err);
+  }
+}
+
+window.viewBoardingPass = async function(id) {
+  try {
+    const passes = await dbGetAllPasses();
+    const pass = passes.find(p => p.id === id);
+    if (!pass) return;
+
+    const modal = document.getElementById('modal-view-boarding-pass');
+    const title = document.getElementById('view-bp-title');
+    const passenger = document.getElementById('view-bp-passenger');
+    const flightInfo = document.getElementById('view-bp-flight-info');
+    const mediaWrap = document.getElementById('view-bp-media-wrap');
+    const downloadBtn = document.getElementById('btn-download-bp');
+
+    if (title) title.textContent = `Tarjeta: ${pass.passenger}`;
+    if (passenger) passenger.textContent = pass.passenger;
+    if (flightInfo) flightInfo.textContent = `Ryanair • ${pass.flightType}`;
+    if (downloadBtn) {
+      downloadBtn.href = pass.dataUrl;
+      downloadBtn.download = pass.fileName;
+    }
+
+    if (mediaWrap) {
+      if (pass.fileType === 'application/pdf') {
+        mediaWrap.innerHTML = `
+          <div style="padding: 20px; text-align: center;">
+            <p style="margin-bottom: 12px; font-weight: 600;">Archivo PDF guardado</p>
+            <a href="${pass.dataUrl}" target="_blank" class="btn-sm btn-sm-primary" style="padding: 8px 16px; font-size: 0.9rem;">
+              Abrir PDF en pantalla completa
+            </a>
+          </div>`;
+      } else {
+        mediaWrap.innerHTML = `<img src="${pass.dataUrl}" alt="Tarjeta de embarque" class="bp-scanner-img">`;
+      }
+    }
+
+    modal.showModal();
+  } catch (err) {
+    console.error('Error viewing pass', err);
+  }
+};
+
+window.removeBoardingPass = async function(id) {
+  if (confirm('¿Eliminar esta tarjeta de embarque del dispositivo?')) {
+    await dbDeletePass(id);
+    await renderBoardingPasses();
+    showToast('Tarjeta de embarque eliminada');
+  }
+};
 
 function exportPlan() {
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(appState, null, 2));
@@ -1007,8 +1383,11 @@ function importPlan(event) {
 
 function shareCompleteTrip() {
   const h = appState.trip.hotel;
-  const f = appState.trip.flights;
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA*\n\n🏨 *Hotel:* ${h.name}\n📍 ${h.address}\n📞 Tel: ${h.phone}\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *Vuelos & Traslado:*\n${f.outbound}\n${f.inbound}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
+  const f = appState.trip.flights || {};
+  const out = f.outbound || {};
+  const ret = f.inbound || {};
+
+  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA*\n\n🏨 *Hotel:* ${h.name}\n📍 ${h.address}\n📞 Tel: ${h.phone}\n🔖 Reserva Hotel: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🔖 Localizador PNR: ${f.bookingRef || 'ABC123'}\n🛫 Ida: ${out.flightNo || ''} (${out.origCode} → ${out.destCode}) ${out.date || ''} ${out.depTime || ''}\n🛬 Vuelta: ${ret.flightNo || ''} (${ret.origCode} → ${ret.destCode}) ${ret.date || ''} ${ret.depTime || ''}\n👥 Asientos: ${out.seats || 'Pendientes'}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
 
   if (navigator.share) {
     navigator.share({

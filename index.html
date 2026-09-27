@@ -302,25 +302,153 @@
         </div>
       </div>
 
-      <!-- Vuelos & Traslados -->
+      <!-- Vuelos Ryanair & Boarding Passes -->
       <div class="booking-section-card">
         <div class="booking-header">
           <h3>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
-            Vuelos & Llegada
+            Vuelos & Tarjetas de Embarque
           </h3>
+          <div style="display: flex; gap: 6px;">
+            <button id="btn-edit-flights" class="btn-sm" style="font-size: 0.72rem;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="16.5 3.5 20.5 7.5 7 21 3 21 3 17 16.5 3.5"/></svg>
+              Editar Vuelos
+            </button>
+          </div>
         </div>
-        <div class="data-row">
-          <span class="data-label">Vuelo de Ida</span>
-          <span id="flight-out-val" class="data-value">Vuelo Ida: Salida mañana - Llegada Praga (PRG Terminal 2)</span>
+
+        <!-- Localizador & Aerolínea Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--border-color);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ryanair-badge">RYANAIR</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Reserva / PNR:</span>
+            <strong id="flight-pnr-val" style="color: var(--accent-gold); font-family: monospace; font-size: 1rem; letter-spacing: 1px;">ABC123</strong>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button id="btn-copy-pnr" class="btn-sm" style="padding: 4px 8px; font-size: 0.72rem;" title="Copiar código localizador">
+              Copiar
+            </button>
+            <a href="https://www.ryanair.com/es/es/check-in" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary" style="padding: 4px 10px; font-size: 0.72rem;">
+              Check-in Web
+            </a>
+          </div>
         </div>
-        <div class="data-row">
-          <span class="data-label">Vuelo de Regreso</span>
-          <span id="flight-in-val" class="data-value">Vuelo Vuelta: Praga (PRG Terminal 2) - Regreso</span>
+
+        <!-- Tarjeta Vuelo de Ida -->
+        <div class="flight-route-card">
+          <div class="flight-route-header">
+            <span class="flight-type-badge">VUELO DE IDA</span>
+            <span id="flight-out-no" class="flight-no-badge">FR 2056</span>
+          </div>
+
+          <div class="flight-cities-row">
+            <div class="flight-city-col">
+              <span id="flight-out-orig-code" class="flight-city-code">MAD</span>
+              <span id="flight-out-orig-name" class="flight-city-name">Madrid</span>
+              <span id="flight-out-dep-time" class="flight-time-val">06:45</span>
+            </div>
+
+            <div class="flight-plane-divider">
+              <div class="flight-plane-line"></div>
+              <div class="flight-plane-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+              </div>
+              <span id="flight-out-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Viernes, 16 Oct</span>
+            </div>
+
+            <div class="flight-city-col dest">
+              <span id="flight-out-dest-code" class="flight-city-code">PRG</span>
+              <span id="flight-out-dest-name" class="flight-city-name">Praga</span>
+              <span id="flight-out-arr-time" class="flight-time-val">09:40</span>
+            </div>
+          </div>
+
+          <div class="flight-meta-details">
+            <div class="flight-meta-item">
+              <span class="flight-meta-label">Asientos Familia</span>
+              <span id="flight-out-seats" class="flight-meta-val">18A, 18B, 18C</span>
+            </div>
+            <div class="flight-meta-item">
+              <span class="flight-meta-label">Terminal Salida / Llegada</span>
+              <span id="flight-out-terminal" class="flight-meta-val">T1 → T2 (Praga)</span>
+            </div>
+          </div>
         </div>
-        <div class="data-row">
+
+        <!-- Tarjeta Vuelo de Vuelta -->
+        <div class="flight-route-card">
+          <div class="flight-route-header">
+            <span class="flight-type-badge" style="color: #a855f7; background: rgba(168, 85, 247, 0.12);">VUELO DE VUELTA</span>
+            <span id="flight-in-no" class="flight-no-badge">FR 2057</span>
+          </div>
+
+          <div class="flight-cities-row">
+            <div class="flight-city-col">
+              <span id="flight-in-orig-code" class="flight-city-code">PRG</span>
+              <span id="flight-in-orig-name" class="flight-city-name">Praga</span>
+              <span id="flight-in-dep-time" class="flight-time-val">17:20</span>
+            </div>
+
+            <div class="flight-plane-divider">
+              <div class="flight-plane-line"></div>
+              <div class="flight-plane-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="transform: rotate(180deg);"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+              </div>
+              <span id="flight-in-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Lunes, 19 Oct</span>
+            </div>
+
+            <div class="flight-city-col dest">
+              <span id="flight-in-dest-code" class="flight-city-code">MAD</span>
+              <span id="flight-in-dest-name" class="flight-city-name">Madrid</span>
+              <span id="flight-in-arr-time" class="flight-time-val">20:30</span>
+            </div>
+          </div>
+
+          <div class="flight-meta-details">
+            <div class="flight-meta-item">
+              <span class="flight-meta-label">Asientos Familia</span>
+              <span id="flight-in-seats" class="flight-meta-val">18A, 18B, 18C</span>
+            </div>
+            <div class="flight-meta-item">
+              <span class="flight-meta-label">Terminal Salida / Llegada</span>
+              <span id="flight-in-terminal" class="flight-meta-val">T2 (Praga) → T1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips Ryanair en Familia -->
+        <div style="background: rgba(7, 53, 144, 0.2); border-left: 3px solid #f1c40f; padding: 10px 12px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 16px;">
+          <strong style="color: #f1c40f;">✈️ Tips Ryanair con Niños:</strong><br>
+          • <strong>Carritos de bebé:</strong> Puedes llevar hasta 2 piezas gratis por niño (carrito plegable + elevador). Se entrega en la misma puerta del avión.<br>
+          • <strong>Check-in online:</strong> Abre 24h antes del vuelo (o 60 días antes si compraste asientos). Recuerda hacerlo antes de llegar al aeropuerto para evitar recargos.
+        </div>
+
+        <!-- SECCIÓN TARJETAS DE EMBARQUE OFFLINE -->
+        <div style="padding-top: 14px; border-top: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px;">
+                🎟️ Tarjetas de Embarque Offline
+              </h4>
+              <p style="font-size: 0.76rem; color: var(--text-muted);">
+                Guarda los QR o PDFs aquí. Disponibles en modo avión en el aeropuerto.
+              </p>
+            </div>
+            <button id="btn-add-boarding-pass" class="btn-sm btn-sm-primary" style="padding: 6px 12px; white-space: nowrap;">
+              + Subir Tarjeta
+            </button>
+          </div>
+
+          <!-- Lista de Tarjetas de Embarque -->
+          <div id="boarding-passes-list" class="boarding-passes-container">
+            <!-- Renderizado dinámico vía app.js -->
+          </div>
+        </div>
+
+        <!-- Traslado Aeropuerto Václav Havel -->
+        <div class="data-row" style="margin-top: 16px;">
           <span class="data-label">Traslado Aeropuerto al Centro</span>
-          <span id="flight-trans-val" class="data-value">Autobús 119 hasta metro Nádraží Veleslavín (Línea A). O Bolt/Uber (~450-550 CZK).</span>
+          <span id="flight-trans-val" class="data-value">Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min). O Bolt/Uber (~450-550 CZK).</span>
         </div>
       </div>
 
@@ -508,6 +636,167 @@
         <button type="submit" class="btn-sm btn-sm-primary">Guardar Cambios</button>
       </div>
     </form>
+  </dialog>
+
+  <!-- Modal: Editar Vuelos -->
+  <dialog id="modal-edit-flights">
+    <div class="modal-header">
+      <h3>Editar Vuelos Ryanair</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-edit-flights').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="form-edit-flights">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="edit-flight-pnr">Código de Reserva / Localizador (PNR)</label>
+          <input type="text" id="edit-flight-pnr" class="form-control" placeholder="Ej: ABC123" required>
+        </div>
+
+        <h4 style="font-size: 0.9rem; color: #38bdf8; margin-top: 6px;">✈️ Vuelo de Ida</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-out-no">Nº Vuelo</label>
+            <input type="text" id="edit-out-no" class="form-control" placeholder="FR 2056">
+          </div>
+          <div class="form-group">
+            <label for="edit-out-date">Fecha</label>
+            <input type="text" id="edit-out-date" class="form-control" placeholder="Viernes, 16 Oct">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-out-orig">Origen (Ciudad/Código)</label>
+            <input type="text" id="edit-out-orig" class="form-control" placeholder="Madrid (MAD)">
+          </div>
+          <div class="form-group">
+            <label for="edit-out-dest">Destino</label>
+            <input type="text" id="edit-out-dest" class="form-control" placeholder="Praga (PRG)">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-out-dep">Hora Salida</label>
+            <input type="time" id="edit-out-dep" class="form-control" value="06:45">
+          </div>
+          <div class="form-group">
+            <label for="edit-out-arr">Hora Llegada</label>
+            <input type="time" id="edit-out-arr" class="form-control" value="09:40">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-out-seats">Asientos Familia (Ida)</label>
+          <input type="text" id="edit-out-seats" class="form-control" placeholder="Ej: 18A, 18B, 18C">
+        </div>
+
+        <h4 style="font-size: 0.9rem; color: #a855f7; margin-top: 12px;">✈️ Vuelo de Vuelta</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-in-no">Nº Vuelo</label>
+            <input type="text" id="edit-in-no" class="form-control" placeholder="FR 2057">
+          </div>
+          <div class="form-group">
+            <label for="edit-in-date">Fecha</label>
+            <input type="text" id="edit-in-date" class="form-control" placeholder="Lunes, 19 Oct">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-in-orig">Origen</label>
+            <input type="text" id="edit-in-orig" class="form-control" placeholder="Praga (PRG)">
+          </div>
+          <div class="form-group">
+            <label for="edit-in-dest">Destino</label>
+            <input type="text" id="edit-in-dest" class="form-control" placeholder="Madrid (MAD)">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-in-dep">Hora Salida</label>
+            <input type="time" id="edit-in-dep" class="form-control" value="17:20">
+          </div>
+          <div class="form-group">
+            <label for="edit-in-arr">Hora Llegada</label>
+            <input type="time" id="edit-in-arr" class="form-control" value="20:30">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-in-seats">Asientos Familia (Vuelta)</label>
+          <input type="text" id="edit-in-seats" class="form-control" placeholder="Ej: 18A, 18B, 18C">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-flights" class="btn-sm">Cancelar</button>
+        <button type="submit" class="btn-sm btn-sm-primary">Guardar Vuelos</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Subir Tarjeta de Embarque -->
+  <dialog id="modal-add-boarding-pass">
+    <div class="modal-header">
+      <h3>Subir Tarjeta de Embarque</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-add-boarding-pass').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="form-add-boarding-pass">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="bp-passenger-input">Nombre del Pasajero / Familiar</label>
+          <input type="text" id="bp-passenger-input" class="form-control" placeholder="Ej: Francisco, María, Hugo..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="bp-flight-type">Tipo de Vuelo</label>
+          <select id="bp-flight-type" class="form-control">
+            <option value="Ida">Vuelo de Ida (Hacia Praga)</option>
+            <option value="Vuelta">Vuelo de Vuelta (Hacia Casa)</option>
+            <option value="Ida y Vuelta">Ambos Vuelos</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bp-file-input">Archivo o Captura de Pantalla (QR / PDF / Imagen)</label>
+          <input type="file" id="bp-file-input" class="form-control" accept="image/*,application/pdf" required>
+          <small style="color: var(--text-muted); font-size: 0.72rem; margin-top: 4px;">
+            💡 Consejo: Haz una captura de pantalla del código QR en la app de Ryanair o sube el PDF descargado.
+          </small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-bp" class="btn-sm">Cancelar</button>
+        <button type="submit" class="btn-sm btn-sm-primary">Guardar en el Móvil</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Visor Tarjeta de Embarque Pantalla Completa (Scanner Friendly) -->
+  <dialog id="modal-view-boarding-pass">
+    <div class="modal-header" style="background: #0f172a;">
+      <h3 id="view-bp-title" style="color: #fff;">Tarjeta de Embarque</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-view-boarding-pass').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="bp-modal-body">
+      <div class="bp-scanner-card">
+        <div id="view-bp-passenger" class="bp-scanner-passenger">Nombre Pasajero</div>
+        <div id="view-bp-flight-info" class="bp-scanner-info">Vuelo Ryanair</div>
+        
+        <div id="view-bp-media-wrap" style="width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px;">
+          <!-- Imagen o vista previa del PDF -->
+        </div>
+
+        <div class="bp-bright-tip">
+          ☀️ Sube el brillo de tu pantalla para que el escáner del aeropuerto lo lea al instante.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="background: #0f172a; justify-content: space-between;">
+      <a id="btn-download-bp" href="#" download class="btn-sm">Descargar archivo</a>
+      <button type="button" class="btn-sm btn-sm-primary" onclick="document.getElementById('modal-view-boarding-pass').close()">Cerrar</button>
+    </div>
   </dialog>
 
   <script src="./app.js"></script>

@@ -1158,3 +1158,285 @@ dialog::backdrop {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   RYANAIR FLIGHTS & BOARDING PASSES
+   ========================================================================== */
+.ryanair-badge {
+  background: #073590;
+  color: #f1c40f;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flight-route-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flight-route-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #073590;
+}
+
+.flight-route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.flight-type-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.flight-no-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #f1c40f;
+  font-family: monospace;
+}
+
+.flight-cities-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 12px 0;
+}
+
+.flight-city-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flight-city-col.dest {
+  align-items: flex-end;
+}
+
+.flight-city-code {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.flight-city-name {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.flight-time-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.flight-plane-divider {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.flight-plane-line {
+  width: 100%;
+  height: 2px;
+  background: dashed rgba(255, 255, 255, 0.2);
+  border-top: 1px dashed rgba(255, 255, 255, 0.3);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.flight-plane-icon {
+  background: var(--bg-primary);
+  padding: 0 6px;
+  position: relative;
+  z-index: 2;
+  color: #38bdf8;
+}
+
+.flight-meta-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.78rem;
+}
+
+.flight-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.flight-meta-label {
+  color: var(--text-subtle);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.flight-meta-val {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Boarding Pass Cards */
+.boarding-passes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.boarding-pass-item {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.bp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bp-passenger-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bp-flight-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-gold);
+}
+
+.bp-preview-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-surface);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.bp-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+}
+
+.bp-pdf-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(225, 29, 72, 0.15);
+  color: #fda4af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.bp-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Modal for Boarding Pass Fullscreen Scanner */
+.bp-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.bp-scanner-card {
+  width: 100%;
+  max-width: 320px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.bp-scanner-img {
+  max-width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.bp-scanner-passenger {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #073590;
+}
+
+.bp-scanner-info {
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.bp-bright-tip {
+  font-size: 0.76rem;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
