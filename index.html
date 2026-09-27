@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Praga en Familia - Planificador & Guía de Viaje</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#1e1b4b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Praga Familia">
+  <meta name="description" content="App ligera y offline para planificar el viaje a Praga con la familia: itinerario, mapas, consejos, reservas y equipaje.">
+
+  <!-- Manifest & Icons -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="./icons/icon.svg" alt="Logo Praga" class="header-logo">
+      <div class="header-title-box">
+        <h1>Praga en Familia 🏰</h1>
+        <p>Tu guía y planning de viaje offline</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btn-pwa-install" class="btn-install-banner" style="display: none;" title="Instalar en el móvil">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Instalar</span>
+      </button>
+      <button class="icon-btn" id="btn-share-trip-header" onclick="shareCompleteTrip()" title="Compartir viaje" aria-label="Compartir viaje">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- ==================================================================== -->
+    <!-- TAB 1: ITINERARIO -->
+    <!-- ==================================================================== -->
+    <section id="tab-itinerary" class="tab-content active">
+      <!-- Hero Banner -->
+      <div class="hero-card">
+        <div class="hero-header">
+          <span class="hero-badge">Itinerario Familiar</span>
+          <span style="font-size: 0.8rem; color: #cbd5e1;">✨ 4 Días Planificados</span>
+        </div>
+        <h2 class="hero-title">La Ciudad de las Cien Torres</h2>
+        <p class="hero-desc">Rutas organizadas a un ritmo tranquilo para disfrutar con niños, con paradas para descansar, vistas increíbles y trdelník caliente.</p>
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">4</span>
+            <span class="hero-stat-lbl">Días</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">19</span>
+            <span class="hero-stat-lbl">Paradas clave</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">100%</span>
+            <span class="hero-stat-lbl">Offline</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day selector -->
+      <nav class="day-selector" aria-label="Selector de día">
+        <button class="day-pill active" data-day="1">
+          <span>Día 1</span>
+          <small>Ciudad Vieja</small>
+        </button>
+        <button class="day-pill" data-day="2">
+          <span>Día 2</span>
+          <small>Castillo & Malá Strana</small>
+        </button>
+        <button class="day-pill" data-day="3">
+          <span>Día 3</span>
+          <small>Petřín & Río</small>
+        </button>
+        <button class="day-pill" data-day="4">
+          <span>Día 4</span>
+          <small>Vyšehrad & Despedida</small>
+        </button>
+      </nav>
+
+      <!-- Day Summary Banner -->
+      <div class="day-summary-card">
+        <div class="day-summary-info">
+          <h3 id="day-summary-title">Día 1: Ciudad Vieja y Barrio Judío</h3>
+          <p id="day-summary-desc">Recorrido por el casco histórico, Reloj Astronómico y descanso con dulces.</p>
+        </div>
+        <span id="day-progress-badge" class="day-progress-pill">0 de 5 hechas</span>
+      </div>
+
+      <!-- Timeline List -->
+      <div id="timeline-list" class="timeline"></div>
+
+      <!-- Add Activity Button -->
+      <button id="btn-add-activity" class="btn-add-activity">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Añadir parada personalizada a este día
+      </button>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 2: LUGARES & MAPA -->
+    <!-- ==================================================================== -->
+    <section id="tab-places" class="tab-content">
+      <div class="search-bar-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="search-places-input" class="search-input" placeholder="Buscar monumento, parque o mirador...">
+      </div>
+
+      <!-- Filter chips -->
+      <div class="filter-chips">
+        <button class="chip active" data-cat="all">Todos</button>
+        <button class="chip" data-cat="kids">👶 Ideal Niños</button>
+        <button class="chip" data-cat="castle">🏰 Castillo & Malá Strana</button>
+        <button class="chip" data-cat="views">🌆 Miradores</button>
+        <button class="chip" data-cat="monument">⭐ Monumentos</button>
+      </div>
+
+      <!-- Places Grid -->
+      <div id="places-grid" class="places-grid"></div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 3: GUÍA PRÁCTICA & TIPS -->
+    <!-- ==================================================================== -->
+    <section id="tab-guide" class="tab-content">
+
+      <!-- Conversor de Moneda -->
+      <div class="guide-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/></svg>
+          Conversor Rápido CZK ↔ EUR
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Funciona 100% sin internet en cualquier tienda, cafetería o restaurante.</p>
+        
+        <div class="converter-box">
+          <div class="converter-inputs">
+            <div class="conv-col">
+              <label for="conv-czk">Coronas Checas (CZK)</label>
+              <input type="number" id="conv-czk" class="conv-input" placeholder="100">
+            </div>
+            <div class="conv-equal">≈</div>
+            <div class="conv-col">
+              <label for="conv-eur">Euros (€)</label>
+              <input type="number" id="conv-eur" class="conv-input" placeholder="3.97">
+            </div>
+          </div>
+
+          <div class="quick-conv-buttons">
+            <span style="font-size: 0.72rem; color: var(--text-subtle); align-self: center; margin-right: 4px;">Atajos:</span>
+            <button class="quick-conv-btn" onclick="setQuickConv(50)">50 CZK (~2€)</button>
+            <button class="quick-conv-btn" onclick="setQuickConv(100)">100 CZK (~4€)</button>
+            <button class="quick-conv-btn" onclick="setQuickConv(250)">250 CZK (~10€)</button>
+            <button class="quick-conv-btn" onclick="setQuickConv(500)">500 CZK (~20€)</button>
+            <button class="quick-conv-btn" onclick="setQuickConv(1000)">1000 CZK (~40€)</button>
+          </div>
+
+          <div class="conv-rate-info">
+            <span id="conv-rate-display">1 EUR ≈ 25.20 CZK</span>
+            <button id="btn-edit-rate" class="btn-sm" style="padding: 2px 8px; font-size: 0.7rem;">Cambiar tasa</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transporte Público & Niños -->
+      <div class="guide-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><rect x="3" y="3" width="18" height="15" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="18"/><line x1="15" y1="21" x2="15" y2="18"/></svg>
+          Transporte Público en Familia
+        </h3>
+        
+        <div style="background: rgba(16, 185, 129, 0.12); border-left: 3px solid var(--accent-emerald); padding: 10px 12px; border-radius: 4px; font-size: 0.82rem; color: #a7f3d0; margin-bottom: 12px;">
+          <strong>🎉 ¡Gran ventaja con niños!</strong><br>
+          • <strong>Menores de 6 años:</strong> Viajan 100% GRATIS en metro, tranvía y autobús sin ningún trámite.<br>
+          • <strong>Niños de 6 a 15 años:</strong> También viajan GRATIS si llevan documento que acredite su edad (DNI o Pasaporte).
+        </div>
+
+        <div class="ticket-grid">
+          <div class="ticket-card">
+            <span class="ticket-duration">Billete 30 Minutos</span>
+            <span class="ticket-price">30 CZK</span>
+            <span class="ticket-eur">~ 1,20 €</span>
+          </div>
+          <div class="ticket-card">
+            <span class="ticket-duration">Billete 90 Minutos</span>
+            <span class="ticket-price">40 CZK</span>
+            <span class="ticket-eur">~ 1,60 €</span>
+          </div>
+          <div class="ticket-card">
+            <span class="ticket-duration">Pase 24 Horas</span>
+            <span class="ticket-price">120 CZK</span>
+            <span class="ticket-eur">~ 4,80 €</span>
+          </div>
+          <div class="ticket-card">
+            <span class="ticket-duration">Pase 72 Horas</span>
+            <span class="ticket-price">330 CZK</span>
+            <span class="ticket-eur">~ 13,10 €</span>
+          </div>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+          ⚠️ <strong>Regla de oro:</strong> Valida el billete una sola vez en la máquina amarilla al subir al tranvía o al entrar a la estación de metro. No vuelvas a marcarlo al hacer trasbordos.
+        </p>
+      </div>
+
+      <!-- Consejos de Supervivencia Familiar -->
+      <div class="guide-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ruby)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Consejos Prácticos & Evitar Timos
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; color: #cbd5e1;">
+          <div style="background: var(--bg-primary); padding: 10px 12px; border-radius: var(--radius-sm);">
+            <strong style="color: #f87171;">🚫 Cajeros Euronet (Amarillos/Azules):</strong> Cóbran comisiones desorbitadas de cambio. Si necesitas efectivo en coronas, usa solo cajeros de bancos oficiales (Česká spořitelna, Komerční banka, ČSOB).
+          </div>
+          <div style="background: var(--bg-primary); padding: 10px 12px; border-radius: var(--radius-sm);">
+            <strong style="color: var(--accent-gold);">🚖 Taxis en la calle:</strong> No pares taxis levantando la mano en la calle (frecuentes sobreprecios). Usa las apps <strong>Bolt</strong> o <strong>Uber</strong> con precio cerrado y tarjeta.
+          </div>
+          <div style="background: var(--bg-primary); padding: 10px 12px; border-radius: var(--radius-sm);">
+            <strong style="color: var(--accent-blue);">🚼 Carritos y Adoquines:</strong> El centro histórico y Malá Strana son adoquinados antiguos. El carrito de ruedas grandes o una mochila de porteo van genial.
+          </div>
+          <div style="background: var(--bg-primary); padding: 10px 12px; border-radius: var(--radius-sm);">
+            <strong style="color: var(--accent-emerald);">🚻 Baños públicos familiares:</strong> En todas las estaciones de metro hay baños limpios (suelen costar entre 10 y 20 CZK, ten algunas monedas sueltas o tarjeta). En los centros comerciales Palladium y Nový Smíchov hay zonas de lactancia y cambiadores excelentes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Diccionario Checo Útil con Voz -->
+      <div class="guide-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Frases Clave en Checo (Toca el altavoz)
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Los checos aprecian muchísimo que se salude y dé las gracias en su idioma.</p>
+        <div id="phrases-list" class="phrase-list"></div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 4: RESERVAS & DOCUMENTOS -->
+    <!-- ==================================================================== -->
+    <section id="tab-bookings" class="tab-content">
+      
+      <!-- Alojamiento -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Alojamiento / Hotel
+          </h3>
+          <button id="btn-edit-hotel" class="btn-sm" style="font-size: 0.72rem;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="16.5 3.5 20.5 7.5 7 21 3 21 3 17 16.5 3.5"/></svg>
+            Editar
+          </button>
+        </div>
+
+        <div class="data-row">
+          <span class="data-label">Nombre del Hotel o Apartamento</span>
+          <span id="hotel-name-val" class="data-value">Grand Hotel Bohemia</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Dirección</span>
+          <span id="hotel-address-val" class="data-value">Králodvorská 4, 110 00 Staré Město, Praga</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Teléfono de Contacto</span>
+          <span id="hotel-phone-val" class="data-value">+420 234 608 111</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Código de Reserva</span>
+          <span id="hotel-ref-val" class="data-value">BK-789214-PRG</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Notas & Check-in</span>
+          <span id="hotel-notes-val" class="data-value">Check-in: 14:00 | Desayuno incluido. Cuna para niños disponible.</span>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <a id="btn-hotel-maps" href="#" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary" style="flex: 1; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Cómo Llegar (Maps)
+          </a>
+          <a id="btn-hotel-call" href="#" class="btn-sm" style="flex: 1; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Llamar Hotel
+          </a>
+        </div>
+      </div>
+
+      <!-- Vuelos & Traslados -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+            Vuelos & Llegada
+          </h3>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Vuelo de Ida</span>
+          <span id="flight-out-val" class="data-value">Vuelo Ida: Salida mañana - Llegada Praga (PRG Terminal 2)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Vuelo de Regreso</span>
+          <span id="flight-in-val" class="data-value">Vuelo Vuelta: Praga (PRG Terminal 2) - Regreso</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Traslado Aeropuerto al Centro</span>
+          <span id="flight-trans-val" class="data-value">Autobús 119 hasta metro Nádraží Veleslavín (Línea A). O Bolt/Uber (~450-550 CZK).</span>
+        </div>
+      </div>
+
+      <!-- Números de Emergencia -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ruby)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Contactos de Emergencia en Praga
+          </h3>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="tel:112" class="btn-full btn-danger">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Llamar al 112 (Emergencias UE - En español/inglés)
+          </a>
+
+          <a href="tel:+420233097211" class="btn-full" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-main);">
+            <span>🏛️ Embajada de España en Praga: +420 233 097 211</span>
+          </a>
+
+          <a href="tel:+420606623060" class="btn-full" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: #fca5a5;">
+            <span>🚨 Emergencia Consular (24h): +420 606 623 060</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Sincronización y Compartir -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Copia de Seguridad y Compartir
+          </h3>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+          Pasa el planning al móvil de tu pareja o familia descargando el archivo y enviándolo por WhatsApp.
+        </p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button id="btn-export-plan" class="btn-sm" style="flex: 1; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Descargar Backup (.json)
+          </button>
+          <button id="btn-import-plan" class="btn-sm" style="flex: 1; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Cargar Backup (.json)
+          </button>
+          <input type="file" id="file-import-plan" accept=".json" style="display: none;">
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 5: CHECKLIST DE EQUIPAJE -->
+    <!-- ==================================================================== -->
+    <section id="tab-checklist" class="tab-content">
+      
+      <!-- Progress Bar -->
+      <div class="progress-card">
+        <div class="progress-header">
+          <span class="progress-title">Equipaje y Preparativos</span>
+          <span id="checklist-progress-pct" class="progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="checklist-progress-fill" class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;" id="checklist-progress-text">
+          0 de 0 cosas listas
+        </div>
+      </div>
+
+      <!-- Add item form -->
+      <form id="form-add-checklist" style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <input type="text" id="checklist-new-item" class="form-control" placeholder="Añadir a la maleta..." required style="flex: 1;">
+        <select id="checklist-new-cat" class="form-control" style="width: auto;">
+          <option value="Documentos">📄 Docs</option>
+          <option value="Salud">💊 Salud</option>
+          <option value="Ropa">👟 Ropa</option>
+          <option value="Tecnología">🔋 Tecno</option>
+          <option value="Especial Niños" selected>🧸 Niños</option>
+        </select>
+        <button type="submit" class="btn-sm btn-sm-primary" style="padding: 0 14px;">+</button>
+      </form>
+
+      <!-- Checklist Items Container -->
+      <div id="checklist-items-wrap"></div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <button class="nav-item active" data-tab="itinerary">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Itinerario</span>
+    </button>
+    <button class="nav-item" data-tab="places">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Lugares</span>
+    </button>
+    <button class="nav-item" data-tab="guide">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span>Guía & Tips</span>
+    </button>
+    <button class="nav-item" data-tab="bookings">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Reservas</span>
+    </button>
+    <button class="nav-item" data-tab="checklist">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>Maleta</span>
+    </button>
+  </nav>
+
+  <!-- ==================================================================== -->
+  <!-- MODALS -->
+  <!-- ==================================================================== -->
+
+  <!-- Modal: Añadir Actividad al Itinerario -->
+  <dialog id="modal-add-activity">
+    <div class="modal-header">
+      <h3>Añadir Parada al Itinerario</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-add-activity').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="form-add-activity">
+      <div class="modal-body">
+        <input type="hidden" id="activity-day-input" value="1">
+        <div class="form-group">
+          <label for="act-title">Lugar o Actividad</label>
+          <input type="text" id="act-title" class="form-control" placeholder="Ej: Merienda en Cukrárna Myšák" required>
+        </div>
+        <div class="form-group">
+          <label for="act-time">Hora prevista</label>
+          <input type="time" id="act-time" class="form-control" value="16:00" required>
+        </div>
+        <div class="form-group">
+          <label for="act-desc">Descripción</label>
+          <textarea id="act-desc" class="form-control" rows="2" placeholder="Detalles de la visita, cómo llegar..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="act-tip">Consejo con niños</label>
+          <input type="text" id="act-tip" class="form-control" placeholder="Ej: Tienen tronas y una terraza tranquila...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-activity" class="btn-sm">Cancelar</button>
+        <button type="submit" class="btn-sm btn-sm-primary">Guardar Parada</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modal: Editar Hotel -->
+  <dialog id="modal-edit-hotel">
+    <div class="modal-header">
+      <h3>Editar Datos del Alojamiento</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-edit-hotel').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="form-edit-hotel">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="edit-hotel-name">Nombre del Hotel / Apartamento</label>
+          <input type="text" id="edit-hotel-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-hotel-address">Dirección completa</label>
+          <input type="text" id="edit-hotel-address" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-hotel-phone">Teléfono de contacto</label>
+          <input type="text" id="edit-hotel-phone" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="edit-hotel-ref">Número o Código de Reserva</label>
+          <input type="text" id="edit-hotel-ref" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="edit-hotel-notes">Notas adicionales (check-in, desayuno, etc.)</label>
+          <textarea id="edit-hotel-notes" class="form-control" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-hotel" class="btn-sm">Cancelar</button>
+        <button type="submit" class="btn-sm btn-sm-primary">Guardar Cambios</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>

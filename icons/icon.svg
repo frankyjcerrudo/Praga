@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="bridgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded app icon frame -->
+  <rect width="512" height="512" rx="112" fill="url(#skyGrad)"/>
+
+  <!-- Golden Moon / Prague Sun -->
+  <circle cx="390" cy="130" r="48" fill="#fef08a" opacity="0.85"/>
+  <circle cx="390" cy="130" r="64" fill="#fde047" opacity="0.15"/>
+
+  <!-- Prague Castle & St. Vitus Cathedral Silhouettes -->
+  <!-- St. Vitus Spire -->
+  <polygon points="256,70 270,170 242,170" fill="url(#goldGrad)"/>
+  <rect x="245" y="170" width="22" height="70" fill="#0f172a"/>
+  
+  <!-- Left spires -->
+  <polygon points="180,110 192,190 168,190" fill="url(#goldGrad)"/>
+  <rect x="171" y="190" width="18" height="60" fill="#0f172a"/>
+  
+  <polygon points="140,140 150,210 130,210" fill="url(#goldGrad)"/>
+  <rect x="133" y="210" width="14" height="40" fill="#0f172a"/>
+
+  <!-- Right spires -->
+  <polygon points="320,105 332,185 308,185" fill="url(#goldGrad)"/>
+  <rect x="311" y="185" width="18" height="65" fill="#0f172a"/>
+
+  <!-- Castle wall base -->
+  <path d="M100,250 L412,250 L412,290 L100,290 Z" fill="#1e293b"/>
+
+  <!-- Charles Bridge Arches & River -->
+  <rect x="50" y="290" width="412" height="50" fill="url(#bridgeGrad)"/>
+  
+  <!-- Bridge Arches -->
+  <path d="M70,340 Q110,290 150,340 Z" fill="#0f172a"/>
+  <path d="M170,340 Q210,290 250,340 Z" fill="#0f172a"/>
+  <path d="M270,340 Q310,290 350,340 Z" fill="#0f172a"/>
+  <path d="M370,340 Q410,290 450,340 Z" fill="#0f172a"/>
+
+  <!-- Vltava River waves -->
+  <path d="M30,360 C120,345 180,375 270,360 C360,345 420,375 482,360 L482,460 C420,470 360,450 270,465 C180,480 120,455 30,470 Z" fill="#0369a1" opacity="0.6"/>
+  <path d="M30,390 C130,375 190,405 290,390 C390,375 430,400 482,390 L482,470 L30,470 Z" fill="#0284c7" opacity="0.4"/>
+
+  <!-- Family Silhouette icon on Bridge -->
+  <!-- Parent 1 -->
+  <circle cx="230" cy="265" r="7" fill="#f8fafc"/>
+  <path d="M222,275 C222,273 238,273 238,275 L235,290 L225,290 Z" fill="#f8fafc"/>
+
+  <!-- Child -->
+  <circle cx="248" cy="272" r="5" fill="#f59e0b"/>
+  <path d="M243,279 C243,277 253,277 253,279 L251,290 L245,290 Z" fill="#f59e0b"/>
+
+  <!-- Parent 2 -->
+  <circle cx="264" cy="264" r="7" fill="#f8fafc"/>
+  <path d="M256,274 C256,272 272,272 272,274 L269,290 L259,290 Z" fill="#f8fafc"/>
+
+  <!-- Text "PRAGA" Badge at bottom -->
+  <rect x="136" y="415" width="240" height="54" rx="27" fill="#0f172a" stroke="url(#goldGrad)" stroke-width="3"/>
+  <text x="256" y="451" fill="#fde047" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="26" font-weight="800" text-anchor="middle" letter-spacing="4">PRAGA</text>
+</svg>

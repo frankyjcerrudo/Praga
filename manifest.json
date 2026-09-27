@@ -1,0 +1,20 @@
+{
+  "name": "Praga en Familia - Guía y Planificador",
+  "short_name": "Praga Familia",
+  "description": "Planning completo, mapas, consejos prácticos, reservas y equipaje para viajar a Praga con la familia.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#1e1b4b",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "productivity", "utilities"]
+}
