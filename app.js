@@ -17,7 +17,8 @@ const defaultData = {
       notes: 'Check-in: 14:00 | Desayuno incluido. Cuna para niños disponible. A 5 min de la Plaza de la Ciudad Vieja.'
     },
     passengers: [
-      { name: 'Francisco José Cerrudo', type: 'Adulto + Bebé', baggage: '20 kg Facturado' },
+      { name: 'Francisco José Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Lizara Cerrudo', type: 'Bebé', baggage: 'Bebé (2 piezas gratis: carrito + elevador)' },
       { name: 'Aroa Rodríguez González', type: 'Adulto', baggage: '20 kg Facturado' },
       { name: 'Francisco José Cerrudo Alonso', type: 'Adulto', baggage: '20 kg Facturado' },
       { name: 'Ana Cristina Menjíbar García', type: 'Adulto', baggage: '20 kg Facturado' },
