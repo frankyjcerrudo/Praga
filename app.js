@@ -10,11 +10,12 @@ const defaultData = {
     title: 'Viaje a Praga con la Familia',
     dates: '25 Nov - 29 Nov 2026',
     hotel: {
-      name: 'Grand Hotel Bohemia / Apartamento Familiar Staré Město',
-      address: 'Králodvorská 4, 110 00 Staré Město, Praga',
-      phone: '+420 234 608 111',
-      bookingRef: 'BK-789214-PRG',
-      notes: 'Check-in: 14:00 | Desayuno incluido. Cuna para niños disponible. A 5 min de la Plaza de la Ciudad Vieja.'
+      name: 'Large Historic Home by Charles Bridge & Parking',
+      address: 'Vítězná 18, 118 00 Malá Strana, Praga, República Checa',
+      phone: '+420 (Contactar vía Booking)',
+      bookingRef: 'Booking: MQJZJj',
+      bookingUrl: 'https://www.booking.com/Share-MQJZJj',
+      notes: 'Casa histórica amplia con parking junto al Puente de Carlos. Parada tranvía Újezd en la puerta (L22 directa al Castillo). Ideal para familias con cocina completa y gran salón.'
     },
     passengers: [
       { name: 'Francisco José Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
@@ -462,6 +463,9 @@ function loadState() {
       const parsed = JSON.parse(saved);
       if (parsed.trip && parsed.trip.flights && typeof parsed.trip.flights.outbound === 'string') {
         parsed.trip.flights = defaultData.trip.flights;
+      }
+      if (parsed.trip && parsed.trip.hotel && (!parsed.trip.hotel.name || parsed.trip.hotel.name.includes('Bohemia'))) {
+        parsed.trip.hotel = defaultData.trip.hotel;
       }
       return { ...defaultData, ...parsed };
     } catch (e) {
@@ -1190,6 +1194,11 @@ function renderBookings() {
   const btnMapsHotel = document.getElementById('btn-hotel-maps');
   if (btnMapsHotel) {
     btnMapsHotel.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.name + ' ' + h.address)}`;
+  }
+
+  const btnBookingHotel = document.getElementById('btn-hotel-booking');
+  if (btnBookingHotel) {
+    btnBookingHotel.href = h.bookingUrl || 'https://www.booking.com/Share-MQJZJj';
   }
 
   const btnCallHotel = document.getElementById('btn-hotel-call');
