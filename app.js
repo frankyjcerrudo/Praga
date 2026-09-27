@@ -8,7 +8,7 @@ const STORAGE_KEY = 'praga_familia_data_v1';
 const defaultData = {
   trip: {
     title: 'Viaje a Praga con la Familia',
-    dates: '4 Días Mágicos',
+    dates: '25 Nov - 29 Nov 2026',
     hotel: {
       name: 'Grand Hotel Bohemia / Apartamento Familiar Staré Město',
       address: 'Králodvorská 4, 110 00 Staré Město, Praga',
@@ -16,32 +16,44 @@ const defaultData = {
       bookingRef: 'BK-789214-PRG',
       notes: 'Check-in: 14:00 | Desayuno incluido. Cuna para niños disponible. A 5 min de la Plaza de la Ciudad Vieja.'
     },
+    passengers: [
+      { name: 'Francisco José Cerrudo', type: 'Adulto + Bebé', baggage: '20 kg Facturado' },
+      { name: 'Aroa Rodríguez González', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Francisco José Cerrudo Alonso', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Ana Cristina Menjíbar García', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Álvaro Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Lorena Abarca', type: 'Adulto', baggage: '20 kg Facturado' }
+    ],
     flights: {
       airline: 'Ryanair',
-      bookingRef: 'ABC123',
+      bookingRef: 'Pendiente de localizador',
       outbound: {
-        flightNo: 'FR 2056',
+        flightNo: 'FR2766',
         origCode: 'MAD',
         origName: 'Madrid (Barajas T1)',
         destCode: 'PRG',
         destName: 'Praga (Václav Havel T2)',
-        date: 'Viernes, 16 Oct',
-        depTime: '06:45',
-        arrTime: '09:40',
-        seats: '18A, 18B, 18C',
-        terminal: 'T1 → T2 (Praga)'
+        date: 'Miércoles, 25 Nov',
+        depTime: '17:35',
+        arrTime: '20:35',
+        duration: '3h',
+        seats: 'Asignación 3h antes (check-in)',
+        terminal: 'T1 → T2 (Praga)',
+        baggage: 'Equipaje 20 kg facturado'
       },
       inbound: {
-        flightNo: 'FR 2057',
+        flightNo: 'FR3613',
         origCode: 'PRG',
         origName: 'Praga (Václav Havel T2)',
         destCode: 'MAD',
         destName: 'Madrid (Barajas T1)',
-        date: 'Lunes, 19 Oct',
-        depTime: '17:20',
-        arrTime: '20:30',
-        seats: '18A, 18B, 18C',
-        terminal: 'T2 (Praga) → T1'
+        date: 'Domingo, 29 Nov',
+        depTime: '15:05',
+        arrTime: '18:10',
+        duration: '3h 05m',
+        seats: 'Asignación 3h antes (check-in)',
+        terminal: 'T2 (Praga) → T1',
+        baggage: 'Equipaje 20 kg facturado'
       },
       transfer: 'Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min). O pedir Bolt/Uber (~450-550 CZK).'
     },
@@ -1097,7 +1109,9 @@ function initBookings() {
   if (formAddBp && modalAddBp) {
     formAddBp.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const passenger = document.getElementById('bp-passenger-input').value.trim();
+      const pSelect = document.getElementById('bp-passenger-select');
+      const pInput = document.getElementById('bp-passenger-input');
+      const passenger = (pSelect ? pSelect.value : (pInput ? pInput.value : 'Familiar')).trim();
       const flightType = document.getElementById('bp-flight-type').value;
       const fileInput = document.getElementById('bp-file-input');
 
