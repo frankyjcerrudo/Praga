@@ -2,7 +2,7 @@
 // PRAGA EN FAMILIA - LOGIC & OFFLINE DATA STORE
 // ==========================================================================
 
-const STORAGE_KEY = 'praga_familia_data_v2';
+const STORAGE_KEY = 'praga_familia_data_v3';
 
 // Initial default data tailored for a family trip to Prague (25 Nov - 29 Nov 2026)
 const defaultData = {
@@ -47,9 +47,9 @@ const defaultData = {
         destCode: 'PRG',
         destName: 'Praga (Václav Havel T2)',
         date: 'Miércoles, 25 Nov',
-        depTime: '15:05',
-        arrTime: '18:10',
-        duration: '3h 05m',
+        depTime: '17:35',
+        arrTime: '20:25',
+        duration: '2h 50m',
         seats: 'Asignación gratuita en check-in',
         terminal: 'T1 (Madrid) → T2 (Praga)',
         baggage: '6 x 20 kg facturados + 2 piezas bebé gratis'
@@ -68,7 +68,7 @@ const defaultData = {
         terminal: 'T2 (Praga) → T1 (Madrid)',
         baggage: '6 x 20 kg facturados + 2 piezas bebé gratis'
       },
-      transfer: 'Monovolumen grande privado reservado para los 7: recogida en el aeropuerto de Praga el 25 Nov a la llegada (18:10 hrs) hasta Vítězná 18, y recogida en el apartamento el 29 Nov a las 12:00 hrs hacia el aeropuerto. En Madrid: traslado en Uber.'
+      transfer: 'Monovolumen grande privado reservado para los 7: recogida en el aeropuerto de Praga el 25 Nov a la llegada del avión (20:25 hrs) hasta Vítězná 18, y recogida en el apartamento el 29 Nov a las 12:00 hrs hacia el aeropuerto. En Madrid: traslado en Uber (salida ~15:00 hacia Barajas T1).'
     },
     restaurants: [
       {
@@ -153,10 +153,10 @@ const defaultData = {
         title: 'Traslado Aeropuerto PRG → Apartamento (Vítězná 18)',
         type: 'Monovolumen grande privado (7 plazas + maletas)',
         date: 'Miércoles, 25 Nov 2026',
-        time: '18:10 hrs (a la llegada del vuelo)',
+        time: '20:25 hrs (a la llegada del vuelo)',
         origin: 'Aeropuerto Václav Havel (T2)',
         destination: 'Vítězná 18, 118 00 Malá Strana, Praga',
-        desc: 'Chofer privado esperándonos a la salida del vuelo FR2766 para llevarnos directos al apartamento sin escaleras ni transbordos de transporte público.'
+        desc: 'Chofer privado esperándonos a la salida del vuelo FR2766 tras aterrizar a las 20:25 hrs para llevarnos directos al apartamento sin escaleras ni transbordos de transporte público.'
       },
       {
         id: 'tr2',
@@ -173,10 +173,10 @@ const defaultData = {
         title: 'Traslados en Madrid (Casa ↔ Aeropuerto Barajas T1)',
         type: 'Uber / Vehículo espacioso',
         date: '25 Nov (Ida) & 29 Nov (Vuelta)',
-        time: 'Ida: 12:30 hrs | Vuelta: 18:45 hrs',
+        time: 'Ida: 15:00 hrs | Vuelta: 18:45 hrs',
         origin: 'Domicilio familiar en Madrid',
         destination: 'Aeropuerto Adolfo Suárez Madrid-Barajas T1',
-        desc: 'Contratación de Uber para trasladarnos cómodamente desde casa al aeropuerto en Madrid y regreso a la vuelta.'
+        desc: 'Contratación de Uber para trasladarnos cómodamente desde casa al aeropuerto en Madrid (salida ~15:00 hrs para vuelo de las 17:35) y de vuelta a la llegada.'
       }
     ],
     exchangeRate: 25.20
@@ -189,10 +189,10 @@ const defaultData = {
     {
       id: 'd1-1',
       day: 1,
-      time: '15:05',
+      time: '17:35',
       title: 'Vuelo de Ida: Madrid (MAD) → Praga (PRG)',
       czechName: 'Letiště Václava Havla Praha',
-      desc: 'Salida en vuelo directo de Ryanair FR2766 desde la Terminal 1 de Madrid Barajas a las 15:05 hrs. Llegada prevista a la Terminal 2 de Praga Václav Havel a las 18:10 hrs.',
+      desc: 'Salida en vuelo directo de Ryanair FR2766 desde la Terminal 1 de Madrid Barajas a las 17:35 hrs. Llegada prevista a la Terminal 2 de Praga Václav Havel a las 20:25 hrs.',
       familyTip: 'Tener a mano las tarjetas de embarque en la app. Los carritos de bebé se entregan en la propia puerta del avión al embarcar.',
       coords: '50.1008,14.2600',
       mapsQuery: 'Vaclav Havel Airport Prague',
@@ -201,10 +201,10 @@ const defaultData = {
     {
       id: 'd1-2',
       day: 1,
-      time: '18:45',
+      time: '20:55',
       title: '🚐 Traslado en Monovolumen Grande al Apartamento',
       czechName: 'Transfer z letiště do Malé Strany',
-      desc: 'Monovolumen grande privado reservado esperándonos a la salida de la terminal para llevarnos directos y cómodos con los 7 viajeros, maletas y carrito hasta nuestro apartamento en Vítězná 18.',
+      desc: 'Monovolumen grande privado reservado esperándonos a la salida de la terminal (tras aterrizar a las 20:25 hrs) para llevarnos directos y cómodos con los 7 viajeros, maletas y carrito hasta nuestro apartamento en Vítězná 18.',
       familyTip: 'Traslado directo sin transbordos de metro ni maletas a cuestas, ideal tras el viaje en avión con el bebé.',
       coords: '50.0816,14.4061',
       mapsQuery: 'Vítězná 18 Malá Strana Prague',
@@ -213,7 +213,7 @@ const defaultData = {
     {
       id: 'd1-3',
       day: 1,
-      time: '19:30',
+      time: '21:35',
       title: 'Llegada y Check-in en el Apartamento',
       czechName: 'Large Historic Home by Charles Bridge & Parking',
       desc: 'Instalación en la casa histórica de 110 m² (3 habitaciones, 2 baños). Reparto de dormitorios, acomodación y descanso inicial.',
@@ -225,7 +225,7 @@ const defaultData = {
     {
       id: 'd1-4',
       day: 1,
-      time: '20:15',
+      time: '22:00',
       title: 'Compra en Mini Market local',
       czechName: 'Nákup potravin (Mini Market)',
       desc: 'Paseo corto (a 9 minutos a pie del apartamento) para comprar provisiones de desayunos, leche, agua, fruta y cena relajada en el apartamento.',
@@ -778,11 +778,11 @@ function loadState() {
     }
   }
 
-  // Smooth migration from v1 preserving checked items
-  const v1Saved = localStorage.getItem('praga_familia_data_v1');
-  if (v1Saved) {
+  // Smooth migration from v1/v2 preserving checked items
+  const prevSaved = localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
+  if (prevSaved) {
     try {
-      const oldParsed = JSON.parse(v1Saved);
+      const oldParsed = JSON.parse(prevSaved);
       const initial = JSON.parse(JSON.stringify(defaultData));
       if (oldParsed.checklist && Array.isArray(oldParsed.checklist)) {
         oldParsed.checklist.forEach(oldItem => {
@@ -1554,11 +1554,11 @@ function renderBookings() {
   if (elOutNo) elOutNo.textContent = out.flightNo || 'FR2766';
   if (elOutOrigCode) elOutOrigCode.textContent = out.origCode || 'MAD';
   if (elOutOrigName) elOutOrigName.textContent = out.origName || 'Madrid';
-  if (elOutDepTime) elOutDepTime.textContent = out.depTime || '15:05';
+  if (elOutDepTime) elOutDepTime.textContent = out.depTime || '17:35';
   if (elOutDate) elOutDate.textContent = out.date || 'Miércoles, 25 Nov';
   if (elOutDestCode) elOutDestCode.textContent = out.destCode || 'PRG';
   if (elOutDestName) elOutDestName.textContent = out.destName || 'Praga';
-  if (elOutArrTime) elOutArrTime.textContent = out.arrTime || '18:10';
+  if (elOutArrTime) elOutArrTime.textContent = out.arrTime || '20:25';
   if (elOutSeats) elOutSeats.textContent = out.seats || 'Gratis en Check-in';
   if (elOutTerminal) elOutTerminal.textContent = out.terminal || 'T1 (Madrid) → T2 (Praga)';
 
@@ -1800,7 +1800,7 @@ function shareCompleteTrip() {
   const restos = (appState.trip.restaurants || []).map(r => `• ${r.name}: ${r.day} a las ${r.time} (${r.address})`).join('\n');
   const tours = (appState.trip.tours || []).map(t => `• ${t.name}: ${t.day} a las ${t.time}`).join('\n');
 
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 15:05 → ${out.destCode} 18:10) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 18:10)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
+  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
 
   if (navigator.share) {
     navigator.share({

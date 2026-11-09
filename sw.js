@@ -1,5 +1,5 @@
 // Service Worker para 'Praga en Familia' - Funcionamiento 100% Offline
-const CACHE_NAME = 'praga-familia-v2';
+const CACHE_NAME = 'praga-familia-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
