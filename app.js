@@ -2,7 +2,7 @@
 // PRAGA EN FAMILIA - LOGIC & OFFLINE DATA STORE
 // ==========================================================================
 
-const STORAGE_KEY = 'praga_familia_data_v3';
+const STORAGE_KEY = 'praga_familia_data_v4';
 
 // Initial default data tailored for a family trip to Prague (25 Nov - 29 Nov 2026)
 const defaultData = {
@@ -28,14 +28,42 @@ const defaultData = {
       checkOut: 'Domingo 29 de noviembre 2026',
       notes: 'Casa histórica señorial en Malá Strana, a 12 min a pie del Puente de Carlos y a 1,6 km del Reloj Astronómico. Vistas al jardín, wifi gratis en todo el alojamiento y parking privado. Parada de tranvía en la puerta (L22 directa al Castillo).'
     },
+    insurance: {
+      provider: 'Heymondo (Viaje Tranquilidad)',
+      underwriter: 'IMA Ibérica Asistencia',
+      policyNo: '2605917',
+      emergencyPhone: '+34 913 536 323',
+      emergencyPhoneLink: 'tel:+34913536323',
+      insuredCount: 7,
+      dates: '25/11/2026 - 29/11/2026',
+      destination: 'República Checa',
+      policyHolder: 'Ana Cristina Mengíbar García (DNI: 08969596X)',
+      totalCost: '133,70 €',
+      airHelpPlusUrl: 'https://funnel.airhelp.com/claims/new/trip-details?lang=es&referrer=&partner=heymondo',
+      coverages: [
+        { label: 'Gastos Médicos por Enfermedad o Accidente', amount: 'Hasta 500.000 €' },
+        { label: 'Repatriación y Traslado Sanitario', amount: 'Incluido 100%' },
+        { label: 'Robo y Daños Materiales a Equipajes', amount: 'Hasta 2.000 €' },
+        { label: 'Equipamiento Electrónico (Móviles/Cámaras)', amount: 'Hasta 1.000 €' },
+        { label: 'Demora de Entrega de Equipaje (+10h)', amount: 'Hasta 200 €' },
+        { label: 'Urgencias Odontológicas', amount: 'Hasta 150 €' },
+        { label: 'Desplazamiento / Estancia Familiar en Hospital', amount: 'Hasta 1.200 € (80 €/día)' },
+        { label: 'Convalecencia en Hotel por Enfermedad', amount: 'Hasta 1.200 € (80 €/día)' },
+        { label: 'Interrupción de Viaje ya iniciado', amount: 'Hasta 1.500 €' },
+        { label: 'Demora en Salida de Transporte', amount: 'Hasta 200 € (50 € / 6h)' },
+        { label: 'Responsabilidad Civil Privada', amount: 'Hasta 60.000 €' },
+        { label: 'Defensa Jurídica Penal en el Extranjero', amount: 'Hasta 3.000 €' },
+        { label: 'Servicio AirHelp Plus (Reclamación de Vuelos)', amount: 'Indemnización de hasta 600 € por pasajero' }
+      ]
+    },
     passengers: [
-      { name: 'Francisco José Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Aroa Rodríguez González', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Francisco José Cerrudo Alonso', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Ana Cristina Menjíbar García', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Álvaro Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Lorena Abarca', type: 'Adulto', baggage: '20 kg Facturado' },
-      { name: 'Lizara Cerrudo', type: 'Bebé', baggage: 'Bebé (2 piezas gratis: carrito + elevador)' }
+      { name: 'Francisco José Cerrudo Menjíbar', dni: '53561599G', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Aroa Rodríguez González', dni: '53518788L', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Francisco José Cerrudo Alonso', dni: '08967327H', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Ana Cristina Mengíbar García', dni: '08969596X', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Álvaro Cerrudo Menjíbar', dni: '53561600M', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Lorena Abarca Subirón', dni: '18172581M', type: 'Adulto', baggage: '20 kg Facturado' },
+      { name: 'Lizara Cerrudo Abarca', dni: '61751331B', type: 'Bebé', baggage: 'Bebé (2 piezas gratis: carrito + elevador)' }
     ],
     flights: {
       airline: 'Ryanair',
@@ -728,6 +756,8 @@ const defaultData = {
   ],
   checklist: [
     { id: 'c1', cat: 'Documentos', text: 'DNI / Pasaportes de toda la familia en vigor (6 adultos + 1 bebé)', checked: true },
+    { id: 'c-ins', cat: 'Documentos', text: 'Póliza Seguro Heymondo nº 2605917 descargada (asistencia 500.000€)', checked: true },
+    { id: 'c-app', cat: 'Documentos', text: 'App Heymondo instalada (chat médico 24h y llamada por internet)', checked: false },
     { id: 'c2', cat: 'Documentos', text: 'Tarjeta Sanitaria Europea (TSE) de cada miembro de la familia', checked: true },
     { id: 'c3', cat: 'Documentos', text: 'Tarjetas bancarias sin comisión (Revolut, N26 o similares)', checked: true },
     { id: 'c4', cat: 'Documentos', text: 'Tarjetas de embarque Ryanair descargadas offline (Ida FR2766 / Vuelta FR3613)', checked: false },
@@ -778,8 +808,8 @@ function loadState() {
     }
   }
 
-  // Smooth migration from v1/v2 preserving checked items
-  const prevSaved = localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
+  // Smooth migration from v1/v2/v3 preserving checked items
+  const prevSaved = localStorage.getItem('praga_familia_data_v3') || localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
   if (prevSaved) {
     try {
       const oldParsed = JSON.parse(prevSaved);
@@ -1796,11 +1826,12 @@ function shareCompleteTrip() {
   const f = appState.trip.flights || {};
   const out = f.outbound || {};
   const ret = f.inbound || {};
+  const ins = appState.trip.insurance || {};
 
   const restos = (appState.trip.restaurants || []).map(r => `• ${r.name}: ${r.day} a las ${r.time} (${r.address})`).join('\n');
   const tours = (appState.trip.tours || []).map(t => `• ${t.name}: ${t.day} a las ${t.time}`).join('\n');
 
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
+  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🛡️ *SEGURO DE VIAJE HEYMONDO:*\n• Póliza: ${ins.policyNumber || '2605917'} (${ins.policyType || 'Viaje Tranquilidad'})\n• Asistencia 24h: ${ins.phone || '+34 913 536 323'}\n• Cobertura: 500.000 € médica | AirHelp Plus hasta 600 €/pax\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
 
   if (navigator.share) {
     navigator.share({

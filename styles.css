@@ -1538,4 +1538,42 @@ dialog::backdrop {
   margin-top: 4px;
 }
 
+/* Insurance Specific Styles */
+.badge-insurance {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.insurance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.insurance-coverage-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.insurance-coverage-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.insurance-coverage-val {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #a7f3d0;
+}
+
+
 
