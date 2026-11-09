@@ -327,19 +327,27 @@
         </div>
 
         <!-- Localizador & Aerolínea Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--border-color);">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ryanair-badge">RYANAIR</span>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Reserva / PNR:</span>
-            <strong id="flight-pnr-val" style="color: var(--accent-gold); font-family: monospace; font-size: 1rem; letter-spacing: 1px;">ABC123</strong>
+        <div style="background: var(--bg-primary); padding: 12px 14px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="ryanair-badge">RYANAIR</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Localizador / PNR:</span>
+              <strong id="flight-pnr-val" style="color: var(--accent-gold); font-family: monospace; font-size: 1.1rem; letter-spacing: 1.5px;">B5Y4FQ</strong>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-copy-pnr" class="btn-sm" style="padding: 4px 8px; font-size: 0.72rem;" title="Copiar código localizador">
+                Copiar PNR
+              </button>
+              <a href="https://www.ryanair.com/es/es/check-in" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary" style="padding: 4px 10px; font-size: 0.72rem;">
+                Check-in Web
+              </a>
+            </div>
           </div>
-          <div style="display: flex; gap: 6px;">
-            <button id="btn-copy-pnr" class="btn-sm" style="padding: 4px 8px; font-size: 0.72rem;" title="Copiar código localizador">
-              Copiar
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; border-top: 1px dashed var(--border-color); padding-top: 7px; color: var(--text-muted);">
+            <span>✉️ Email de la reserva: <strong id="flight-email-val" style="color: var(--text-light); font-weight: 600;">fjcerrudo@gmail.com</strong></span>
+            <button id="btn-copy-flight-email" class="btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" title="Copiar email de la reserva">
+              Copiar Email
             </button>
-            <a href="https://www.ryanair.com/es/es/check-in" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary" style="padding: 4px 10px; font-size: 0.72rem;">
-              Check-in Web
-            </a>
           </div>
         </div>
 
@@ -846,9 +854,15 @@
     </div>
     <form id="form-edit-flights">
       <div class="modal-body">
-        <div class="form-group">
-          <label for="edit-flight-pnr">Código de Reserva / Localizador (PNR)</label>
-          <input type="text" id="edit-flight-pnr" class="form-control" placeholder="Ej: ABC123" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label for="edit-flight-pnr">Código Localizador (PNR)</label>
+            <input type="text" id="edit-flight-pnr" class="form-control" placeholder="Ej: B5Y4FQ" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-flight-email">Email de la Reserva</label>
+            <input type="email" id="edit-flight-email" class="form-control" placeholder="fjcerrudo@gmail.com">
+          </div>
         </div>
 
         <h4 style="font-size: 0.9rem; color: #38bdf8; margin-top: 6px;">✈️ Vuelo de Ida</h4>

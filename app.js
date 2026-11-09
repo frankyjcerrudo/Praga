@@ -2,7 +2,7 @@
 // PRAGA EN FAMILIA - LOGIC & OFFLINE DATA STORE
 // ==========================================================================
 
-const STORAGE_KEY = 'praga_familia_data_v4';
+const STORAGE_KEY = 'praga_familia_data_v5';
 
 // Initial default data tailored for a family trip to Prague (25 Nov - 29 Nov 2026)
 const defaultData = {
@@ -67,7 +67,8 @@ const defaultData = {
     ],
     flights: {
       airline: 'Ryanair',
-      bookingRef: 'Pendiente de localizador',
+      bookingRef: 'B5Y4FQ',
+      bookingEmail: 'fjcerrudo@gmail.com',
       outbound: {
         flightNo: 'FR2766',
         origCode: 'MAD',
@@ -760,7 +761,7 @@ const defaultData = {
     { id: 'c-app', cat: 'Documentos', text: 'App Heymondo instalada (chat médico 24h y llamada por internet)', checked: false },
     { id: 'c2', cat: 'Documentos', text: 'Tarjeta Sanitaria Europea (TSE) de cada miembro de la familia', checked: true },
     { id: 'c3', cat: 'Documentos', text: 'Tarjetas bancarias sin comisión (Revolut, N26 o similares)', checked: true },
-    { id: 'c4', cat: 'Documentos', text: 'Tarjetas de embarque Ryanair descargadas offline (Ida FR2766 / Vuelta FR3613)', checked: false },
+    { id: 'c4', cat: 'Documentos', text: 'Tarjetas de embarque Ryanair descargadas offline (Ida FR2766 / Vuelta FR3613 - Localizador: B5Y4FQ)', checked: false },
     { id: 'c5', cat: 'Documentos', text: 'Reserva del Apartamento guardada (Large Historic Home - Vítězná 18)', checked: true },
     { id: 'c6', cat: 'Documentos', text: 'Entradas Torre Klementinum descargadas (Jueves 26 a las 11:00 hrs)', checked: false },
     { id: 'c7', cat: 'Documentos', text: 'Entradas Castillo de Praga (San Vito, Callejón del Oro, San Jorge) listas', checked: false },
@@ -808,8 +809,8 @@ function loadState() {
     }
   }
 
-  // Smooth migration from v1/v2/v3 preserving checked items
-  const prevSaved = localStorage.getItem('praga_familia_data_v3') || localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
+  // Smooth migration from v1/v2/v3/v4 preserving checked items
+  const prevSaved = localStorage.getItem('praga_familia_data_v4') || localStorage.getItem('praga_familia_data_v3') || localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
   if (prevSaved) {
     try {
       const oldParsed = JSON.parse(prevSaved);
@@ -1376,9 +1377,18 @@ function initBookings() {
   const btnCopyPnr = document.getElementById('btn-copy-pnr');
   if (btnCopyPnr) {
     btnCopyPnr.addEventListener('click', () => {
-      const pnr = appState.trip.flights.bookingRef || 'ABC123';
+      const pnr = appState.trip.flights.bookingRef || 'B5Y4FQ';
       navigator.clipboard.writeText(pnr);
       showToast(`¡Localizador ${pnr} copiado!`);
+    });
+  }
+
+  const btnCopyFlightEmail = document.getElementById('btn-copy-flight-email');
+  if (btnCopyFlightEmail) {
+    btnCopyFlightEmail.addEventListener('click', () => {
+      const email = appState.trip.flights.bookingEmail || 'fjcerrudo@gmail.com';
+      navigator.clipboard.writeText(email);
+      showToast(`¡Email ${email} copiado!`);
     });
   }
 
@@ -1390,7 +1400,9 @@ function initBookings() {
   if (btnEditFlights && modalFlights) {
     btnEditFlights.addEventListener('click', () => {
       const f = appState.trip.flights;
-      document.getElementById('edit-flight-pnr').value = f.bookingRef || '';
+      document.getElementById('edit-flight-pnr').value = f.bookingRef || 'B5Y4FQ';
+      const emailInput = document.getElementById('edit-flight-email');
+      if (emailInput) emailInput.value = f.bookingEmail || 'fjcerrudo@gmail.com';
       
       const out = f.outbound || {};
       document.getElementById('edit-out-no').value = out.flightNo || '';
@@ -1423,6 +1435,8 @@ function initBookings() {
       e.preventDefault();
       const f = appState.trip.flights;
       f.bookingRef = document.getElementById('edit-flight-pnr').value.trim();
+      const emailInput = document.getElementById('edit-flight-email');
+      if (emailInput) f.bookingEmail = emailInput.value.trim();
 
       f.outbound.flightNo = document.getElementById('edit-out-no').value.trim();
       f.outbound.date = document.getElementById('edit-out-date').value.trim();
@@ -1566,7 +1580,10 @@ function renderBookings() {
 
   // Render Ryanair Flights
   const pnrEl = document.getElementById('flight-pnr-val');
-  if (pnrEl) pnrEl.textContent = f.bookingRef || 'ABC123';
+  if (pnrEl) pnrEl.textContent = f.bookingRef || 'B5Y4FQ';
+
+  const emailEl = document.getElementById('flight-email-val');
+  if (emailEl) emailEl.textContent = f.bookingEmail || 'fjcerrudo@gmail.com';
 
   // Outbound
   const out = f.outbound || {};
@@ -1831,7 +1848,7 @@ function shareCompleteTrip() {
   const restos = (appState.trip.restaurants || []).map(r => `• ${r.name}: ${r.day} a las ${r.time} (${r.address})`).join('\n');
   const tours = (appState.trip.tours || []).map(t => `• ${t.name}: ${t.day} a las ${t.time}`).join('\n');
 
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🛡️ *SEGURO DE VIAJE HEYMONDO:*\n• Póliza: ${ins.policyNumber || '2605917'} (${ins.policyType || 'Viaje Tranquilidad'})\n• Asistencia 24h: ${ins.phone || '+34 913 536 323'}\n• Cobertura: 500.000 € médica | AirHelp Plus hasta 600 €/pax\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
+  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🔖 Localizador PNR: ${f.bookingRef || 'B5Y4FQ'} (Email: ${f.bookingEmail || 'fjcerrudo@gmail.com'})\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🛡️ *SEGURO DE VIAJE HEYMONDO:*\n• Póliza: ${ins.policyNumber || '2605917'} (${ins.policyType || 'Viaje Tranquilidad'})\n• Asistencia 24h: ${ins.phone || '+34 913 536 323'}\n• Cobertura: 500.000 € médica | AirHelp Plus hasta 600 €/pax\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
 
   if (navigator.share) {
     navigator.share({

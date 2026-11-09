@@ -39,7 +39,8 @@ Funciona **100% offline** (en el avión, en el metro o sin cobertura) y no requi
    - **🛡️ Seguro de Viaje Heymondo (Póliza 2605917 - Viaje Tranquilidad)**: Botón directo de llamada de asistencia médica 24h (+34 913 536 323), copia rápida de nº de póliza, tramitación de indemnización por retrasos con AirHelp Plus (hasta 600 €/pax) y desglose completo de coberturas (500.000 € asistencia médica, 100% repatriación, 2.000 € equipaje).
    - **👥 Listado Oficial de Pasajeros y DNIs**: Consulta offline inmediata de nombres completos y DNI de los 7 viajeros para facturación, mostradores de embarque y asistencia médica.
    - Ficha del Apartamento con botones directos de **"Llamar al Alojamiento"** y **"Cómo llegar en Google Maps"**.
-   - Información de vuelos y traslados privados en monovolumen.
+   - **✈️ Vuelos Ryanair**: Localizador / PNR **`B5Y4FQ`** y email de reserva **`fjcerrudo@gmail.com`** con botones de copia en 1 clic y enlace directo al Check-in web.
+   - Información de vuelos (Ida FR2766, Vuelta FR3613) y traslados privados en monovolumen.
    - Botón de **Llamada de Emergencia al 112**, teléfono 24h de Heymondo y datos de la **Embajada de España en Praga**.
    - **Copia de seguridad y sincronización familiar**: Exporta e importa el viaje en formato `.json` o compártelo íntegro por WhatsApp.
 
