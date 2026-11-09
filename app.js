@@ -1528,19 +1528,6 @@ function initBookings() {
     });
   }
 
-  // Backup / Export
-  const btnExport = document.getElementById('btn-export-plan');
-  if (btnExport) {
-    btnExport.addEventListener('click', exportPlan);
-  }
-
-  const btnImport = document.getElementById('btn-import-plan');
-  const fileImport = document.getElementById('file-import-plan');
-  if (btnImport && fileImport) {
-    btnImport.addEventListener('click', () => fileImport.click());
-    fileImport.addEventListener('change', importPlan);
-  }
-
   // Share Entire Trip
   const btnShareAll = document.getElementById('btn-share-trip');
   if (btnShareAll) {
@@ -1801,43 +1788,6 @@ window.removeBoardingPass = async function(id) {
     showToast('Tarjeta de embarque eliminada');
   }
 };
-
-function exportPlan() {
-  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(appState, null, 2));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute('href', dataStr);
-  downloadAnchor.setAttribute('download', `Praga_Familia_Planning_${new Date().toISOString().slice(0, 10)}.json`);
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
-  showToast('Archivo JSON de viaje descargado');
-}
-
-function importPlan(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (imported && imported.itinerary) {
-        appState = { ...defaultData, ...imported };
-        saveState();
-        renderItinerary();
-        renderPlaces();
-        renderBookings();
-        renderChecklist();
-        showToast('¡Plan del viaje importado con éxito!');
-      } else {
-        alert('El archivo no tiene el formato correcto de Praga en Familia.');
-      }
-    } catch (err) {
-      alert('Error al leer el archivo JSON.');
-    }
-  };
-  reader.readAsText(file);
-}
 
 function shareCompleteTrip() {
   const h = appState.trip.hotel;

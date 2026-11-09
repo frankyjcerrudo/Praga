@@ -42,7 +42,7 @@ Funciona **100% offline** (en el avión, en el metro o sin cobertura) y no requi
    - **✈️ Vuelos Ryanair**: Localizador / PNR **`B5Y4FQ`** y email de reserva **`fjcerrudo@gmail.com`** con botones de copia en 1 clic y enlace directo al Check-in web.
    - Información de vuelos (Ida FR2766, Vuelta FR3613) y traslados privados en monovolumen.
    - Botón de **Llamada de Emergencia al 112**, teléfono 24h de Heymondo y datos de la **Embajada de España en Praga**.
-   - **Copia de seguridad y sincronización familiar**: Exporta e importa el viaje en formato `.json` o compártelo íntegro por WhatsApp.
+   - **Compartir el viaje completo**: Botón rápido para enviar el resumen del viaje con reservas y contactos por WhatsApp a toda la familia.
 
 5. **✅ Checklist de Equipaje Familiar**:
    - Lista organizada por categorías: Documentos, Salud/Botiquín, Ropa/Calzado, Tecnología, Especial Niños.
