@@ -1527,12 +1527,6 @@ function initBookings() {
       reader.readAsDataURL(file);
     });
   }
-
-  // Share Entire Trip
-  const btnShareAll = document.getElementById('btn-share-trip');
-  if (btnShareAll) {
-    btnShareAll.addEventListener('click', shareCompleteTrip);
-  }
 }
 
 function renderBookings() {
@@ -1788,29 +1782,6 @@ window.removeBoardingPass = async function(id) {
     showToast('Tarjeta de embarque eliminada');
   }
 };
-
-function shareCompleteTrip() {
-  const h = appState.trip.hotel;
-  const f = appState.trip.flights || {};
-  const out = f.outbound || {};
-  const ret = f.inbound || {};
-  const ins = appState.trip.insurance || {};
-
-  const restos = (appState.trip.restaurants || []).map(r => `• ${r.name}: ${r.day} a las ${r.time} (${r.address})`).join('\n');
-  const tours = (appState.trip.tours || []).map(t => `• ${t.name}: ${t.day} a las ${t.time}`).join('\n');
-
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🔖 Localizador PNR: ${f.bookingRef || 'B5Y4FQ'} (Email: ${f.bookingEmail || 'fjcerrudo@gmail.com'})\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 17:35 → ${out.destCode} 20:25) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 20:25)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🛡️ *SEGURO DE VIAJE HEYMONDO:*\n• Póliza: ${ins.policyNumber || '2605917'} (${ins.policyType || 'Viaje Tranquilidad'})\n• Asistencia 24h: ${ins.phone || '+34 913 536 323'}\n• Cobertura: 500.000 € médica | AirHelp Plus hasta 600 €/pax\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
-
-  if (navigator.share) {
-    navigator.share({
-      title: 'Datos del Viaje a Praga',
-      text: text
-    }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(text);
-    showToast('¡Resumen completo copiado al portapapeles!');
-  }
-}
 
 // ==========================================================================
 // 5. CHECKLIST DE EQUIPAJE TAB
