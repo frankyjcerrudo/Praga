@@ -2,7 +2,7 @@
 // PRAGA EN FAMILIA - LOGIC & OFFLINE DATA STORE
 // ==========================================================================
 
-const STORAGE_KEY = 'praga_familia_data_v5';
+const STORAGE_KEY = 'praga_familia_data_v6';
 
 // Initial default data tailored for a family trip to Prague (25 Nov - 29 Nov 2026)
 const defaultData = {
@@ -776,6 +776,7 @@ const defaultData = {
     { id: 'c16', cat: 'Ropa', text: 'Guantes, gorros de lana y bufandas para todos', checked: false },
     { id: 'c17', cat: 'Tecnología', text: 'Baterías externas (Powerbanks) cargadas para aguantar todo el día', checked: false },
     { id: 'c18', cat: 'Tecnología', text: 'Cables cargadores para todos los teléfonos móviles', checked: false },
+    { id: 'c-aur', cat: 'Tecnología', text: 'Auriculares para los móviles (para escuchar las audioguías del Castillo de Praga)', checked: false },
     { id: 'c19', cat: 'Tecnología', text: 'Descargar mapa offline de Praga en Google Maps', checked: false },
     { id: 'c20', cat: 'Especial Niños', text: 'Carrito de paseo plegable para Lizara (embarque gratuito en Ryanair)', checked: false },
     { id: 'c21', cat: 'Especial Niños', text: 'Saco térmico de abrigo o manta para el carrito de bebé', checked: false },
@@ -809,8 +810,8 @@ function loadState() {
     }
   }
 
-  // Smooth migration from v1/v2/v3/v4 preserving checked items
-  const prevSaved = localStorage.getItem('praga_familia_data_v4') || localStorage.getItem('praga_familia_data_v3') || localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
+  // Smooth migration from v1/v2/v3/v4/v5 preserving checked items
+  const prevSaved = localStorage.getItem('praga_familia_data_v5') || localStorage.getItem('praga_familia_data_v4') || localStorage.getItem('praga_familia_data_v3') || localStorage.getItem('praga_familia_data_v2') || localStorage.getItem('praga_familia_data_v1');
   if (prevSaved) {
     try {
       const oldParsed = JSON.parse(prevSaved);
