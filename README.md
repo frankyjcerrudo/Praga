@@ -8,13 +8,22 @@ Funciona **100% offline** (en el avión, en el metro o sin cobertura) y no requi
 
 ## 📱 Características Principales
 
-1. **📅 Itinerario Día a Día Adaptado a Familias**:
-   - **Día 1**: Casco Histórico (Staré Město), Reloj Astronómico, Barrio Judío y parada para degustar *Trdelník*.
-   - **Día 2**: Castillo de Praga (subida en el Tranvía 22), Callejón del Oro, Cambio de guardia, Muro de John Lennon y Puente de Carlos.
-   - **Día 3**: Funicular a la Colina Petřín, Torre panorámica, Laberinto de Espejos, Parque Infantil fluvial (*Dětský Ostrov*) y paseo en barco por el río Moldava.
-   - **Día 4**: Fortaleza de Vyšehrad, Casa Danzante y compras de recuerdos familiares en la juguetería Hamleys y Wenceslao.
-   - Posibilidad de **marcar actividades como completadas** y **añadir paradas personalizadas**.
-   - Botón directo de **"Abrir en Google Maps"** en cada parada.
+1. **📅 Itinerario Día a Día Adaptado a Familias (25 - 29 Nov)**:
+   - **Día 1 (Mié 25)**: Vuelo Ryanair FR2766 (Madrid 15:05 → Praga 18:10), recogida en monovolumen grande privado al apartamento en Malá Strana (Vítězná 18) y compra en Mini Market.
+   - **Día 2 (Jue 26)**: Cruce del Puente de Carlos, tour reservado a la Torre Klementinum (Biblioteca Barroca y Torre Astronómica a las 11:00), Torre de la Pólvora, comida reservada en **Lokál Dlouhááá** (14:00), mercadillo navideño en Plaza de la República y Barrio Judío de Josefov.
+   - **Día 3 (Vie 27)**: Subida al Castillo en Tranvía 22, entradas reservadas a Catedral de San Vito, Callejón del Oro y Basílica de San Jorge con audioguías, comida reservada en **U Glaubiců** (14:00), Malá Strana, calle Nerudova, Muro de John Lennon e Isla de Kampa.
+   - **Día 4 (Sáb 28)**: Ciudad Nueva (Casa Danzante y Cabeza de Kafka), Plaza de Wenceslao, comida reservada en **Pork's Vodičkova** (13:45), paseo en barco navideño por el río Moldava iluminado (17:00), encendido del Gran Árbol de Navidad en la Plaza Vieja y cena reservada en **U Tří jelínků** (20:30).
+   - **Día 5 (Dom 29)**: Desayuno, recogida privada en monovolumen a las 12:00 hacia el aeropuerto Václav Havel y vuelo de regreso Ryanair FR3613 (Praga 15:05 → Madrid 18:10).
+   - Posibilidad de **marcar paradas completadas**, **añadir paradas personalizadas** y **abrir directamente en Google Maps**.
+
+2. **🍽️ Reservas & Fichas de Restaurantes**:
+   - Mesas confirmadas en **Lokál Dlouhááá**, **U Glaubiců**, **Pork's Vodičkova** y **U Tří jelínků** con fecha, hora, dirección y botón a Maps.
+
+3. **🎟️ Tours y Entradas Reservadas**:
+   - Entradas oficiales descargadas para Klementinum, Castillo de Praga (San Vito + Callejón del Oro) y Paseo en Barco Navideño.
+
+4. **🚐 Traslados Privados**:
+   - Monovolumen grande para los 7 viajeros del aeropuerto al apartamento y viceversa, más Uber en Madrid.
 
 2. **📍 Lugares de Interés y Filtros**:
    - Buscador rápido y filtros por categoría (*⭐ Imprescindibles*, *👶 Ideal Niños*, *🏰 Castillo*, *🌆 Miradores*).

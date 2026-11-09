@@ -51,18 +51,18 @@
       <!-- Hero Banner -->
       <div class="hero-card">
         <div class="hero-header">
-          <span class="hero-badge">Itinerario Familiar</span>
-          <span style="font-size: 0.8rem; color: #cbd5e1;">✨ 4 Días Planificados</span>
+          <span class="hero-badge">Itinerario Familiar Oficial</span>
+          <span style="font-size: 0.8rem; color: #cbd5e1;">✨ 5 Días Planificados</span>
         </div>
-        <h2 class="hero-title">La Ciudad de las Cien Torres</h2>
-        <p class="hero-desc">Rutas organizadas a un ritmo tranquilo para disfrutar con niños, con paradas para descansar, vistas increíbles y trdelník caliente.</p>
+        <h2 class="hero-title">Viaje a Praga en Familia 🏰</h2>
+        <p class="hero-desc">Itinerario final cerrado (25 - 29 Nov): tours guiados al Klementinum, Castillo de Praga y crucero navideño, con restaurantes tradicionales reservados.</p>
         <div class="hero-stats">
           <div class="hero-stat-item">
-            <span class="hero-stat-val">4</span>
+            <span class="hero-stat-val">5</span>
             <span class="hero-stat-lbl">Días</span>
           </div>
           <div class="hero-stat-item">
-            <span class="hero-stat-val">19</span>
+            <span class="hero-stat-val">24</span>
             <span class="hero-stat-lbl">Paradas clave</span>
           </div>
           <div class="hero-stat-item">
@@ -75,30 +75,34 @@
       <!-- Day selector -->
       <nav class="day-selector" aria-label="Selector de día">
         <button class="day-pill active" data-day="1">
-          <span>25-26 Nov</span>
-          <small>Llegada & Casco Viejo</small>
+          <span>Mié 25</span>
+          <small>Llegada & Compra</small>
         </button>
         <button class="day-pill" data-day="2">
-          <span>27 Nov</span>
-          <small>Castillo & Malá Strana</small>
+          <span>Jue 26</span>
+          <small>Klementinum & Casco</small>
         </button>
         <button class="day-pill" data-day="3">
-          <span>28 Nov</span>
-          <small>Petřín & Moldava</small>
+          <span>Vie 27</span>
+          <small>Castillo & Malá Strana</small>
         </button>
         <button class="day-pill" data-day="4">
-          <span>29 Nov</span>
-          <small>Vyšehrad & Regreso</small>
+          <span>Sáb 28</span>
+          <small>Ciudad Nueva & Barco</small>
+        </button>
+        <button class="day-pill" data-day="5">
+          <span>Dom 29</span>
+          <small>Despedida & Vuelo</small>
         </button>
       </nav>
 
       <!-- Day Summary Banner -->
       <div class="day-summary-card">
         <div class="day-summary-info">
-          <h3 id="day-summary-title">Día 1: Ciudad Vieja y Barrio Judío</h3>
-          <p id="day-summary-desc">Recorrido por el casco histórico, Reloj Astronómico y descanso con dulces.</p>
+          <h3 id="day-summary-title">Día 1: Llegada, Apartamento & Supermercado</h3>
+          <p id="day-summary-desc">Vuelo desde Madrid, traslado en monovolumen a Malá Strana, check-in y compra de provisiones en el Mini Market.</p>
         </div>
-        <span id="day-progress-badge" class="day-progress-pill">0 de 5 hechas</span>
+        <span id="day-progress-badge" class="day-progress-pill">0 de 4 hechas</span>
       </div>
 
       <!-- Timeline List -->
@@ -117,16 +121,17 @@
     <section id="tab-places" class="tab-content">
       <div class="search-bar-wrap">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="search-places-input" class="search-input" placeholder="Buscar monumento, parque o mirador...">
+        <input type="search" id="search-places-input" class="search-input" placeholder="Buscar monumento, restaurante o mirador...">
       </div>
 
       <!-- Filter chips -->
       <div class="filter-chips">
         <button class="chip active" data-cat="all">Todos</button>
-        <button class="chip" data-cat="kids">👶 Ideal Niños</button>
+        <button class="chip" data-cat="restaurant">🍽️ Restaurantes</button>
+        <button class="chip" data-cat="monument">⭐ Monumentos</button>
         <button class="chip" data-cat="castle">🏰 Castillo & Malá Strana</button>
         <button class="chip" data-cat="views">🌆 Miradores</button>
-        <button class="chip" data-cat="monument">⭐ Monumentos</button>
+        <button class="chip" data-cat="kids">👶 Ideal Niños</button>
       </div>
 
       <!-- Places Grid -->
@@ -278,16 +283,16 @@
           <span id="hotel-address-val" class="data-value">Vítězná 18, 118 00 Malá Strana, Praga, República Checa</span>
         </div>
         <div class="data-row">
-          <span class="data-label">Teléfono de Contacto</span>
-          <span id="hotel-phone-val" class="data-value">+420 (Contactar vía Booking)</span>
+          <span class="data-label">Teléfono / Coordinación</span>
+          <span id="hotel-phone-val" class="data-value">+420 776 815 651 (Ana Cristina)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">Código / Enlace de Reserva</span>
-          <span id="hotel-ref-val" class="data-value">Booking: MQJZJj</span>
+          <span class="data-label">Código / Enlace de Reserva & Tarifa</span>
+          <span id="hotel-ref-val" class="data-value">Booking: MQJZJj • 1.273,70 € (Apartamento entero 110 m², 3 hab, 2 baños)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">Notas & Check-in</span>
-          <span id="hotel-notes-val" class="data-value">Casa histórica amplia con parking junto al Puente de Carlos. Parada tranvía Újezd en la puerta (L22 directa al Castillo). Ideal familias.</span>
+          <span class="data-label">Notas & Check-in / Check-out</span>
+          <span id="hotel-notes-val" class="data-value">Check-in: Miércoles 25 Nov | Check-out: Domingo 29 Nov. En pleno Malá Strana, a 12 min a pie del Puente de Carlos. Wifi gratis, parking privado y cocina completa. Tranvía L22 en la puerta.</span>
         </div>
 
         <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
@@ -342,14 +347,14 @@
         <div class="flight-route-card">
           <div class="flight-route-header">
             <span class="flight-type-badge">VUELO DE IDA</span>
-            <span id="flight-out-no" class="flight-no-badge">FR 2056</span>
+            <span id="flight-out-no" class="flight-no-badge">FR2766</span>
           </div>
 
           <div class="flight-cities-row">
             <div class="flight-city-col">
               <span id="flight-out-orig-code" class="flight-city-code">MAD</span>
               <span id="flight-out-orig-name" class="flight-city-name">Madrid</span>
-              <span id="flight-out-dep-time" class="flight-time-val">06:45</span>
+              <span id="flight-out-dep-time" class="flight-time-val">15:05</span>
             </div>
 
             <div class="flight-plane-divider">
@@ -357,24 +362,24 @@
               <div class="flight-plane-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
               </div>
-              <span id="flight-out-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Viernes, 16 Oct</span>
+              <span id="flight-out-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Miércoles, 25 Nov</span>
             </div>
 
             <div class="flight-city-col dest">
               <span id="flight-out-dest-code" class="flight-city-code">PRG</span>
               <span id="flight-out-dest-name" class="flight-city-name">Praga</span>
-              <span id="flight-out-arr-time" class="flight-time-val">09:40</span>
+              <span id="flight-out-arr-time" class="flight-time-val">18:10</span>
             </div>
           </div>
 
           <div class="flight-meta-details">
             <div class="flight-meta-item">
               <span class="flight-meta-label">Asientos Familia</span>
-              <span id="flight-out-seats" class="flight-meta-val">18A, 18B, 18C</span>
+              <span id="flight-out-seats" class="flight-meta-val">Gratis en Check-in</span>
             </div>
             <div class="flight-meta-item">
               <span class="flight-meta-label">Terminal Salida / Llegada</span>
-              <span id="flight-out-terminal" class="flight-meta-val">T1 → T2 (Praga)</span>
+              <span id="flight-out-terminal" class="flight-meta-val">T1 (Madrid) → T2 (Praga)</span>
             </div>
           </div>
         </div>
@@ -383,14 +388,14 @@
         <div class="flight-route-card">
           <div class="flight-route-header">
             <span class="flight-type-badge" style="color: #a855f7; background: rgba(168, 85, 247, 0.12);">VUELO DE VUELTA</span>
-            <span id="flight-in-no" class="flight-no-badge">FR 2057</span>
+            <span id="flight-in-no" class="flight-no-badge">FR3613</span>
           </div>
 
           <div class="flight-cities-row">
             <div class="flight-city-col">
               <span id="flight-in-orig-code" class="flight-city-code">PRG</span>
               <span id="flight-in-orig-name" class="flight-city-name">Praga</span>
-              <span id="flight-in-dep-time" class="flight-time-val">17:20</span>
+              <span id="flight-in-dep-time" class="flight-time-val">15:05</span>
             </div>
 
             <div class="flight-plane-divider">
@@ -398,24 +403,24 @@
               <div class="flight-plane-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="transform: rotate(180deg);"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
               </div>
-              <span id="flight-in-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Lunes, 19 Oct</span>
+              <span id="flight-in-date" style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px;">Domingo, 29 Nov</span>
             </div>
 
             <div class="flight-city-col dest">
               <span id="flight-in-dest-code" class="flight-city-code">MAD</span>
               <span id="flight-in-dest-name" class="flight-city-name">Madrid</span>
-              <span id="flight-in-arr-time" class="flight-time-val">20:30</span>
+              <span id="flight-in-arr-time" class="flight-time-val">18:10</span>
             </div>
           </div>
 
           <div class="flight-meta-details">
             <div class="flight-meta-item">
               <span class="flight-meta-label">Asientos Familia</span>
-              <span id="flight-in-seats" class="flight-meta-val">18A, 18B, 18C</span>
+              <span id="flight-in-seats" class="flight-meta-val">Gratis en Check-in</span>
             </div>
             <div class="flight-meta-item">
               <span class="flight-meta-label">Terminal Salida / Llegada</span>
-              <span id="flight-in-terminal" class="flight-meta-val">T2 (Praga) → T1</span>
+              <span id="flight-in-terminal" class="flight-meta-val">T2 (Praga) → T1 (Madrid)</span>
             </div>
           </div>
         </div>
@@ -491,8 +496,68 @@
 
         <!-- Traslado Aeropuerto Václav Havel -->
         <div class="data-row" style="margin-top: 16px;">
-          <span class="data-label">Traslado Aeropuerto al Centro</span>
-          <span id="flight-trans-val" class="data-value">Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min). O Bolt/Uber (~450-550 CZK).</span>
+          <span class="data-label">Traslado Oficial Aeropuerto ↔ Apartamento</span>
+          <span id="flight-trans-val" class="data-value">Monovolumen grande privado reservado para los 7: recogida en el aeropuerto Václav Havel el 25 Nov a la llegada (18:10 hrs) y recogida en el apartamento el 29 Nov a las 12:00 hrs. En Madrid: Uber desde casa.</span>
+        </div>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- RESTAURANTES RESERVADOS -->
+      <!-- ================================================================== -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            Restaurantes Reservados (4 Citas Clave)
+          </h3>
+          <span class="badge-resto" style="font-size: 0.75rem;">Mesas Confirmadas</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+          Mesas reservadas previamente para toda la familia en restaurantes típicos y cervecerías tradicionales:
+        </p>
+
+        <div id="restaurants-list-container" class="reservation-list">
+          <!-- Renderizado dinámicamente desde app.js -->
+        </div>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TOURS GUIADOS & ENTRADAS RESERVADAS -->
+      <!-- ================================================================== -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            Tours Guiados & Entradas Reservadas
+          </h3>
+          <span class="badge-tour" style="font-size: 0.75rem;">3 Tours Incluidos</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+          Entradas y visitas guiadas con reserva previa y audioguías oficiales descargadas:
+        </p>
+
+        <div id="tours-list-container" class="reservation-list">
+          <!-- Renderizado dinámicamente desde app.js -->
+        </div>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TRASLADOS PRIVADOS & TRANSPORTE -->
+      <!-- ================================================================== -->
+      <div class="booking-section-card">
+        <div class="booking-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Traslados Privados & Monovolumen
+          </h3>
+          <span class="badge-van" style="font-size: 0.75rem;">7 Plazas Privado</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+          Transporte privado concertado para evitar cargar con las maletas y carros por el transporte público:
+        </p>
+
+        <div id="transfers-list-container" class="reservation-list">
+          <!-- Renderizado dinámicamente desde app.js -->
         </div>
       </div>
 
@@ -699,78 +764,78 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-out-no">Nº Vuelo</label>
-            <input type="text" id="edit-out-no" class="form-control" placeholder="FR 2056">
+            <input type="text" id="edit-out-no" class="form-control" placeholder="FR2766" value="FR2766">
           </div>
           <div class="form-group">
             <label for="edit-out-date">Fecha</label>
-            <input type="text" id="edit-out-date" class="form-control" placeholder="Viernes, 16 Oct">
+            <input type="text" id="edit-out-date" class="form-control" placeholder="Miércoles, 25 Nov" value="Miércoles, 25 Nov">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-out-orig">Origen (Ciudad/Código)</label>
-            <input type="text" id="edit-out-orig" class="form-control" placeholder="Madrid (MAD)">
+            <input type="text" id="edit-out-orig" class="form-control" placeholder="Madrid (MAD)" value="Madrid (MAD)">
           </div>
           <div class="form-group">
             <label for="edit-out-dest">Destino</label>
-            <input type="text" id="edit-out-dest" class="form-control" placeholder="Praga (PRG)">
+            <input type="text" id="edit-out-dest" class="form-control" placeholder="Praga (PRG)" value="Praga (PRG)">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-out-dep">Hora Salida</label>
-            <input type="time" id="edit-out-dep" class="form-control" value="06:45">
+            <input type="time" id="edit-out-dep" class="form-control" value="15:05">
           </div>
           <div class="form-group">
             <label for="edit-out-arr">Hora Llegada</label>
-            <input type="time" id="edit-out-arr" class="form-control" value="09:40">
+            <input type="time" id="edit-out-arr" class="form-control" value="18:10">
           </div>
         </div>
 
         <div class="form-group">
           <label for="edit-out-seats">Asientos Familia (Ida)</label>
-          <input type="text" id="edit-out-seats" class="form-control" placeholder="Ej: 18A, 18B, 18C">
+          <input type="text" id="edit-out-seats" class="form-control" placeholder="Asignación gratuita en check-in">
         </div>
 
         <h4 style="font-size: 0.9rem; color: #a855f7; margin-top: 12px;">✈️ Vuelo de Vuelta</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-in-no">Nº Vuelo</label>
-            <input type="text" id="edit-in-no" class="form-control" placeholder="FR 2057">
+            <input type="text" id="edit-in-no" class="form-control" placeholder="FR3613" value="FR3613">
           </div>
           <div class="form-group">
             <label for="edit-in-date">Fecha</label>
-            <input type="text" id="edit-in-date" class="form-control" placeholder="Lunes, 19 Oct">
+            <input type="text" id="edit-in-date" class="form-control" placeholder="Domingo, 29 Nov" value="Domingo, 29 Nov">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-in-orig">Origen</label>
-            <input type="text" id="edit-in-orig" class="form-control" placeholder="Praga (PRG)">
+            <input type="text" id="edit-in-orig" class="form-control" placeholder="Praga (PRG)" value="Praga (PRG)">
           </div>
           <div class="form-group">
             <label for="edit-in-dest">Destino</label>
-            <input type="text" id="edit-in-dest" class="form-control" placeholder="Madrid (MAD)">
+            <input type="text" id="edit-in-dest" class="form-control" placeholder="Madrid (MAD)" value="Madrid (MAD)">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label for="edit-in-dep">Hora Salida</label>
-            <input type="time" id="edit-in-dep" class="form-control" value="17:20">
+            <input type="time" id="edit-in-dep" class="form-control" value="15:05">
           </div>
           <div class="form-group">
             <label for="edit-in-arr">Hora Llegada</label>
-            <input type="time" id="edit-in-arr" class="form-control" value="20:30">
+            <input type="time" id="edit-in-arr" class="form-control" value="18:10">
           </div>
         </div>
 
         <div class="form-group">
           <label for="edit-in-seats">Asientos Familia (Vuelta)</label>
-          <input type="text" id="edit-in-seats" class="form-control" placeholder="Ej: 18A, 18B, 18C">
+          <input type="text" id="edit-in-seats" class="form-control" placeholder="Asignación gratuita en check-in">
         </div>
       </div>
       <div class="modal-footer">

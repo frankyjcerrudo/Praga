@@ -2,20 +2,31 @@
 // PRAGA EN FAMILIA - LOGIC & OFFLINE DATA STORE
 // ==========================================================================
 
-const STORAGE_KEY = 'praga_familia_data_v1';
+const STORAGE_KEY = 'praga_familia_data_v2';
 
-// Initial default data tailored for a family trip to Prague
+// Initial default data tailored for a family trip to Prague (25 Nov - 29 Nov 2026)
 const defaultData = {
   trip: {
     title: 'Viaje a Praga con la Familia',
     dates: '25 Nov - 29 Nov 2026',
+    organizer: {
+      name: 'Ana Cristina Menjíbar',
+      role: 'Organizadora de Viajes',
+      phone: '+420 776 815 651',
+      email: 'amenjibar@gmail.com'
+    },
     hotel: {
       name: 'Large Historic Home by Charles Bridge & Parking',
       address: 'Vítězná 18, 118 00 Malá Strana, Praga, República Checa',
-      phone: '+420 (Contactar vía Booking)',
+      phone: '+420 776 815 651',
+      email: 'amenjibar@gmail.com',
       bookingRef: 'Booking: MQJZJj',
       bookingUrl: 'https://www.booking.com/Share-MQJZJj',
-      notes: 'Casa histórica amplia con parking junto al Puente de Carlos. Parada tranvía Újezd en la puerta (L22 directa al Castillo). Ideal para familias con cocina completa y gran salón.'
+      price: '1.273,70 €',
+      features: 'Apartamento entero (110 m²), 3 habitaciones, 2 baños',
+      checkIn: 'Miércoles 25 de noviembre 2026',
+      checkOut: 'Domingo 29 de noviembre 2026',
+      notes: 'Casa histórica señorial en Malá Strana, a 12 min a pie del Puente de Carlos y a 1,6 km del Reloj Astronómico. Vistas al jardín, wifi gratis en todo el alojamiento y parking privado. Parada de tranvía en la puerta (L22 directa al Castillo).'
     },
     passengers: [
       { name: 'Francisco José Cerrudo', type: 'Adulto', baggage: '20 kg Facturado' },
@@ -36,12 +47,12 @@ const defaultData = {
         destCode: 'PRG',
         destName: 'Praga (Václav Havel T2)',
         date: 'Miércoles, 25 Nov',
-        depTime: '17:35',
-        arrTime: '20:35',
-        duration: '3h',
-        seats: 'Asignación 3h antes (check-in)',
-        terminal: 'T1 → T2 (Praga)',
-        baggage: 'Equipaje 20 kg facturado'
+        depTime: '15:05',
+        arrTime: '18:10',
+        duration: '3h 05m',
+        seats: 'Asignación gratuita en check-in',
+        terminal: 'T1 (Madrid) → T2 (Praga)',
+        baggage: '6 x 20 kg facturados + 2 piezas bebé gratis'
       },
       inbound: {
         flightNo: 'FR3613',
@@ -53,260 +64,554 @@ const defaultData = {
         depTime: '15:05',
         arrTime: '18:10',
         duration: '3h 05m',
-        seats: 'Asignación 3h antes (check-in)',
-        terminal: 'T2 (Praga) → T1',
-        baggage: 'Equipaje 20 kg facturado'
+        seats: 'Asignación gratuita en check-in',
+        terminal: 'T2 (Praga) → T1 (Madrid)',
+        baggage: '6 x 20 kg facturados + 2 piezas bebé gratis'
       },
-      transfer: 'Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min). O pedir Bolt/Uber (~450-550 CZK).'
+      transfer: 'Monovolumen grande privado reservado para los 7: recogida en el aeropuerto de Praga el 25 Nov a la llegada (18:10 hrs) hasta Vítězná 18, y recogida en el apartamento el 29 Nov a las 12:00 hrs hacia el aeropuerto. En Madrid: traslado en Uber.'
     },
+    restaurants: [
+      {
+        id: 'r1',
+        name: 'Lokál Dlouhááá',
+        day: 'Jueves 26 Nov',
+        time: '14:00 hrs',
+        meal: 'Almuerzo / Comida',
+        address: 'Dlouhá 33, 110 00 Staré Město, Chequia',
+        mapsQuery: 'Lokal Dlouhaaa Prague',
+        desc: 'Mítica cervecería y restaurante checo en la Ciudad Vieja (a 9 min de la Plaza Vieja). Cocina casera tradicional con ingredientes frescos de granjas locales y cerveza Pilsner Urquell de tanque recién tirada. Famoso por su goulash con knedlíky y queso frito.'
+      },
+      {
+        id: 'r2',
+        name: 'U Glaubiců',
+        day: 'Viernes 27 Nov',
+        time: '14:00 hrs',
+        meal: 'Almuerzo / Comida',
+        address: 'Malostranské nám. 266/5, Malá Strana, 118 00 Praha 1',
+        mapsQuery: 'U Glaubicu Prague',
+        desc: 'Histórica cervecería y restaurante en plena plaza de Malá Strana, con más de 700 años de tradición en bodegas y bóvedas góticas del siglo XVI. Platos checos contundentes a precios populares inmejorables en pleno casco monumental.'
+      },
+      {
+        id: 'r3',
+        name: 'Pork\'s Vodičkova',
+        day: 'Sábado 28 Nov',
+        time: '13:45 hrs',
+        meal: 'Almuerzo / Comida',
+        address: 'Vodičkova 17, 110 00 Nové Město, Czechia',
+        mapsQuery: 'Porks Vodickova Prague',
+        desc: 'Célebre en toda la ciudad por preparar el codillo asado de cerdo más crujiente y tierno de Praga. Ubicado junto a la Plaza de Wenceslao, con ambiente dinámico, alegre y perfecto para familias.'
+      },
+      {
+        id: 'r4',
+        name: 'U Tří jelínků',
+        day: 'Sábado 28 Nov',
+        time: '20:30 hrs',
+        meal: 'Cena de Despedida',
+        address: 'Nerudova 206/4, Hlavní město Praha 118 00, CZ',
+        mapsQuery: 'U Tri jelinku Prague',
+        desc: 'Restaurante con gran encanto ("Los Tres Ciervos") en la pintoresca calle Nerudova en Malá Strana. Ambiente acogedor con techos de madera y chimenea. Broche de oro gastronómico muy cerca de nuestro apartamento.'
+      }
+    ],
+    tours: [
+      {
+        id: 't1',
+        name: 'Torre Klementinum & Biblioteca Barroca',
+        day: 'Jueves 26 Nov',
+        time: '11:00 hrs',
+        duration: '45 minutos',
+        address: 'Mariánské nám. 5, 110 00 Staré Město',
+        mapsQuery: 'Klementinum Prague',
+        desc: 'Visita guiada en inglés que incluye la deslumbrante Biblioteca Barroca con sus globos terráqueos históricos, el Salón Meridiano y la subida a la Torre Astronómica con vistas 360° de Praga.',
+        notes: 'Entrada reservada para las 11:00 hrs. Llegar 15 min antes a la taquilla.'
+      },
+      {
+        id: 't2',
+        name: 'Castillo de Praga (Catedral de San Vito, San Jorge y Callejón del Oro)',
+        day: 'Viernes 27 Nov (Válida 27 y 28 Nov)',
+        time: '09:00 - 15:00 hrs',
+        duration: 'Visita a nuestro propio ritmo',
+        address: 'Hradčany, 119 08 Praha 1',
+        mapsQuery: 'Prague Castle',
+        desc: 'Circuito completo por el interior de la colosal Catedral de San Vito, la románica Basílica de San Jorge y las casitas de colores del Callejón del Oro con armaduras medievales.',
+        notes: 'Entradas reservadas con validez de 2 días. Audioguías descargadas previamente en los móviles.'
+      },
+      {
+        id: 't3',
+        name: 'Paseo en Barco por el Río Moldava (Iluminación & Encendido Navideño)',
+        day: 'Sábado 28 Nov',
+        time: '17:00 hrs',
+        duration: '50-60 minutos',
+        address: 'Muelle del Río Moldava (cerca del Puente de Carlos)',
+        mapsQuery: 'Prague River Cruise Pier',
+        desc: 'Recorrido en barco climatizado por el Moldava para disfrutar de la ciudad iluminada coincidiendo con la fiesta de inauguración oficial del encendido navideño de Praga.',
+        notes: 'Entradas reservadas a las 17:00 hrs. Embarque cubierto y cómodo para toda la familia y niños.'
+      }
+    ],
+    transfers: [
+      {
+        id: 'tr1',
+        title: 'Traslado Aeropuerto PRG → Apartamento (Vítězná 18)',
+        type: 'Monovolumen grande privado (7 plazas + maletas)',
+        date: 'Miércoles, 25 Nov 2026',
+        time: '18:10 hrs (a la llegada del vuelo)',
+        origin: 'Aeropuerto Václav Havel (T2)',
+        destination: 'Vítězná 18, 118 00 Malá Strana, Praga',
+        desc: 'Chofer privado esperándonos a la salida del vuelo FR2766 para llevarnos directos al apartamento sin escaleras ni transbordos de transporte público.'
+      },
+      {
+        id: 'tr2',
+        title: 'Traslado Apartamento (Vítězná 18) → Aeropuerto PRG',
+        type: 'Monovolumen grande privado (7 plazas + maletas)',
+        date: 'Domingo, 29 Nov 2026',
+        time: '12:00 hrs (recogida en la puerta)',
+        origin: 'Vítězná 18, 118 00 Malá Strana, Praga',
+        destination: 'Aeropuerto Václav Havel (T2)',
+        desc: 'Recogida con tiempo holgado para llegar al aeropuerto sobre las 12:45 hrs y facturar las 6 maletas con calma para el vuelo de las 15:05 hrs.'
+      },
+      {
+        id: 'tr3',
+        title: 'Traslados en Madrid (Casa ↔ Aeropuerto Barajas T1)',
+        type: 'Uber / Vehículo espacioso',
+        date: '25 Nov (Ida) & 29 Nov (Vuelta)',
+        time: 'Ida: 12:30 hrs | Vuelta: 18:45 hrs',
+        origin: 'Domicilio familiar en Madrid',
+        destination: 'Aeropuerto Adolfo Suárez Madrid-Barajas T1',
+        desc: 'Contratación de Uber para trasladarnos cómodamente desde casa al aeropuerto en Madrid y regreso a la vuelta.'
+      }
+    ],
     exchangeRate: 25.20
   },
   currentDay: 1,
   itinerary: [
-    // DÍA 1
+    // ========================================================================
+    // DÍA 1: Miércoles 25 de noviembre - Llegada & Acomodación
+    // ========================================================================
     {
       id: 'd1-1',
       day: 1,
-      time: '10:30',
-      title: 'Plaza de la Ciudad Vieja y Reloj Astronómico',
-      czechName: 'Staroměstské náměstí & Pražský orloj',
-      desc: 'El corazón palpitante de Praga. Ver las figuras mecánicas de los 12 apóstoles en la campanada en punto.',
-      familyTip: 'Llegad 10 minutos antes de la hora en punto para coger buen sitio con los niños delante del reloj.',
-      coords: '50.0870,14.4208',
-      mapsQuery: 'Prague Astronomical Clock',
+      time: '15:05',
+      title: 'Vuelo de Ida: Madrid (MAD) → Praga (PRG)',
+      czechName: 'Letiště Václava Havla Praha',
+      desc: 'Salida en vuelo directo de Ryanair FR2766 desde la Terminal 1 de Madrid Barajas a las 15:05 hrs. Llegada prevista a la Terminal 2 de Praga Václav Havel a las 18:10 hrs.',
+      familyTip: 'Tener a mano las tarjetas de embarque en la app. Los carritos de bebé se entregan en la propia puerta del avión al embarcar.',
+      coords: '50.1008,14.2600',
+      mapsQuery: 'Vaclav Havel Airport Prague',
       completed: false
     },
     {
       id: 'd1-2',
       day: 1,
-      time: '12:00',
-      title: 'Iglesia de Nuestra Señora de Týn y Callejuelas',
-      czechName: 'Kostel Matky Boží před Týnem',
-      desc: 'Las famosas agujas góticas de cuento que parecen el castillo de Disney. Explorar los pasajes peatonales.',
-      familyTip: 'El suelo es de adoquín tradicional; cuidado si vais con carrito, mejor empujar despacio.',
-      coords: '50.0878,14.4226',
-      mapsQuery: 'Church of Our Lady before Týn',
+      time: '18:45',
+      title: '🚐 Traslado en Monovolumen Grande al Apartamento',
+      czechName: 'Transfer z letiště do Malé Strany',
+      desc: 'Monovolumen grande privado reservado esperándonos a la salida de la terminal para llevarnos directos y cómodos con los 7 viajeros, maletas y carrito hasta nuestro apartamento en Vítězná 18.',
+      familyTip: 'Traslado directo sin transbordos de metro ni maletas a cuestas, ideal tras el viaje en avión con el bebé.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
       completed: false
     },
     {
       id: 'd1-3',
       day: 1,
-      time: '13:30',
-      title: 'Almuerzo familiar y parada Trdelník',
-      czechName: 'Trdelník tradicional',
-      desc: 'Probar el famoso pastel cilíndrico asado con azúcar y canela, o relleno de helado para los niños.',
-      familyTip: '¡Pedid uno para compartir primero! Son contundentes y a los peques les chiflan.',
-      coords: '50.0865,14.4200',
-      mapsQuery: 'Trdelnik Prague Old Town',
+      time: '19:30',
+      title: 'Llegada y Check-in en el Apartamento',
+      czechName: 'Large Historic Home by Charles Bridge & Parking',
+      desc: 'Instalación en la casa histórica de 110 m² (3 habitaciones, 2 baños). Reparto de dormitorios, acomodación y descanso inicial.',
+      familyTip: 'Conectar todos los móviles al wifi gratuito del alojamiento para descargar mapas offline y audioguías.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
       completed: false
     },
     {
       id: 'd1-4',
       day: 1,
-      time: '15:00',
-      title: 'Barrio Judío (Josefov) y Sinagogas Históricas',
-      czechName: 'Josefov',
-      desc: 'Paseo tranquilo por la Sinagoga Española y el Antiguo Cementerio Judío con sus miles de lápidas.',
-      familyTip: 'Es un recorrido muy llano y sin coches, ideal para pasear tranquilos tras comer.',
-      coords: '50.0900,14.4194',
-      mapsQuery: 'Josefov Prague',
-      completed: false
-    },
-    {
-      id: 'd1-5',
-      day: 1,
-      time: '17:30',
-      title: 'Torre de la Pólvora y Casa Municipal',
-      czechName: 'Prašná brána & Obecní dům',
-      desc: 'Una de las puertas medievales originales de la ciudad, en estilo gótico negro imponente.',
-      familyTip: 'Al lado está el centro comercial Palladium por si necesitáis baños cómodos con cambiador o algo de abrigo.',
-      coords: '50.0872,14.4278',
-      mapsQuery: 'Powder Tower Prague',
+      time: '20:15',
+      title: 'Compra en Mini Market local',
+      czechName: 'Nákup potravin (Mini Market)',
+      desc: 'Paseo corto (a 9 minutos a pie del apartamento) para comprar provisiones de desayunos, leche, agua, fruta y cena relajada en el apartamento.',
+      familyTip: 'El apartamento dispone de cocina completa, perfecta para preparar desayunos calientes para todos antes de salir cada mañana.',
+      coords: '50.0816,14.4045',
+      mapsQuery: 'Mini market Vitezna Mala Strana Prague',
       completed: false
     },
 
-    // DÍA 2
+    // ========================================================================
+    // DÍA 2: Jueves 26 de noviembre - Klementinum, Ciudad Vieja, Lokál & Barrio Judío
+    // ========================================================================
     {
       id: 'd2-1',
       day: 2,
-      time: '09:00',
-      title: 'Subida escénica en el Tranvía 22 al Castillo',
-      czechName: 'Tramvaj 22 hacia Pohořelec / Pražský hrad',
-      desc: 'Ruta panorámica inolvidable que sube la colina atravesando los barrios históricos.',
-      familyTip: 'Bajar en la parada Pohořelec para hacer la visita al Castillo siempre en bajada (mucho más cómodo con niños).',
-      coords: '50.0875,14.3888',
-      mapsQuery: 'Pohořelec tram stop Prague',
+      time: '09:30',
+      title: 'Paseo matutino cruzando el Puente de Carlos',
+      czechName: 'Karlův most',
+      desc: 'Desayunamos en el apartamento y salimos andando hacia el histórico Puente de Carlos (a 13 min a pie). Lo cruzamos con calma sobre el río Moldava hacia la Ciudad Vieja.',
+      familyTip: 'A primera hora de la mañana el puente tiene menos afluencia, ideal para fotos familiares con las 30 estatuas y vistas al castillo.',
+      coords: '50.0865,14.4114',
+      mapsQuery: 'Charles Bridge Prague',
       completed: false
     },
     {
       id: 'd2-2',
       day: 2,
-      time: '09:45',
-      title: 'Castillo de Praga y Catedral de San Vito',
-      czechName: 'Pražský hrad & Katedrála svatého Víta',
-      desc: 'El castillo antiguo más grande del mundo. Impresionantes vidrieras de colores de Alfons Mucha.',
-      familyTip: 'La entrada a los patios es gratuita; solo se paga ticket para el interior de San Vito y Callejón del Oro.',
-      coords: '50.0909,14.4005',
-      mapsQuery: 'Prague Castle',
+      time: '11:00',
+      title: '🎟️ Visita Guiada Reservada: Torre Klementinum',
+      czechName: 'Klementinum & Barokní knihovna',
+      desc: '¡Entrada reservada a las 11:00 hrs! Visita guiada en inglés (~45 min) por una de las bibliotecas más bellas del planeta. Incluye la deslumbrante Biblioteca Barroca con sus globos terráqueos históricos, el Salón Meridiano y la Torre Astronómica con panorámica de 360°.',
+      familyTip: 'Llegar 15 minutos antes a la taquilla de Klementinum. La torre tiene tramo de escaleras históricas de madera al final.',
+      coords: '50.0866,14.4160',
+      mapsQuery: 'Klementinum Prague',
       completed: false
     },
     {
       id: 'd2-3',
       day: 2,
-      time: '11:30',
-      title: 'El Callejón del Oro',
-      czechName: 'Zlatá ulička',
-      desc: 'Casitas diminutas de colores del siglo XVI donde vivían los orfebres, guardianes y Franz Kafka.',
-      familyTip: 'A los niños les fascina ver las armaduras medievales y las habitaciones en miniatura.',
-      coords: '50.0919,14.4039',
-      mapsQuery: 'Golden Lane Prague',
+      time: '12:15',
+      title: 'Paseo por Calle Karlova y Calle Celetná a la Torre de la Pólvora',
+      czechName: 'Karlova ulice & Prašná brána',
+      desc: 'Paseo por la Calle Karlova, una de las más antiguas de Praga, y la Calle Celetná (antiguo Camino Real flanqueado por casas señoriales) hasta la monumental Torre gótica de la Pólvora.',
+      familyTip: 'Recorrido peatonal muy agradable. En los pasajes hay tiendas de juguetes y figuras checas tradicionales.',
+      coords: '50.0872,14.4278',
+      mapsQuery: 'Powder Tower Prague',
       completed: false
     },
     {
       id: 'd2-4',
       day: 2,
-      time: '12:00',
-      title: 'Cambio de Guardia en el Patio de Honor',
-      czechName: 'Střídání stráží',
-      desc: 'Ceremonia solemne con fanfarria de trompetas desde las ventanas del palacio presidencial.',
-      familyTip: 'El cambio grande es a las 12:00 en punto. Muy vistoso para los más pequeños.',
-      coords: '50.0898,14.3989',
-      mapsQuery: 'Hradcany Square Prague',
+      time: '13:15',
+      title: 'Plaza de la Ciudad Vieja y Souvenirs de Cristal y Madera',
+      czechName: 'Staroměstské náměstí & Pražský orloj',
+      desc: 'Paseo por la Plaza de la Ciudad Vieja y sus callejuelas medievales, repletas de tiendas de souvenirs con las famosas marionetas de madera artesanales y el célebre cristal de Bohemia.',
+      familyTip: 'A los niños les fascina ver las marionetas con hilos expuestas en los escaparates.',
+      coords: '50.0870,14.4208',
+      mapsQuery: 'Old Town Square Prague',
       completed: false
     },
     {
       id: 'd2-5',
       day: 2,
-      time: '14:30',
-      title: 'Muro de John Lennon en Malá Strana',
-      czechName: 'Lennonova zeď',
-      desc: 'Muro lleno de grafitis, poemas de paz y arte psicodélico de los Beatles.',
-      familyTip: 'Se pueden comprar rotuladores cerca si los niños quieren dejar un mensaje de paz o un dibujo familiar.',
-      coords: '50.0862,14.4069',
-      mapsQuery: 'Lennon Wall Prague',
+      time: '14:00',
+      title: '🍽️ Comida Reservada: Restaurante Lokál Dlouhááá',
+      czechName: 'Restaurace Lokál Dlouhááá',
+      desc: '¡Mesa reservada a las 14:00 hrs! Ubicado en Dlouhá 33 (a solo 9 min a pie desde la Plaza Vieja). Cervecería y restaurante icónico de auténtica cocina casera checa fresca (goulash con knedlíky, queso frito smažený sýr y la mejor cerveza Pilsner recién tirada).',
+      familyTip: 'Local amplio, dinámico y muy acogedor con familias. La comida se sirve con rapidez y la calidad es excepcional.',
+      coords: '50.0906,14.4258',
+      mapsQuery: 'Lokal Dlouhaaa Prague',
       completed: false
     },
     {
       id: 'd2-6',
       day: 2,
-      time: '16:00',
-      title: 'Cruzar el Puente de Carlos (Karlův most)',
-      czechName: 'Karlův most',
-      desc: 'Paseo entre las 30 estatuas barrocas sobre el río Moldava con artistas, músicos y vistas al castillo.',
-      familyTip: 'Tocar el relieve del perro y de San Juan Nepomuceno en la estatua para pedir el deseo de volver a Praga.',
-      coords: '50.0865,14.4114',
-      mapsQuery: 'Charles Bridge Prague',
+      time: '15:45',
+      title: 'Mercado Navideño en la Plaza de la República',
+      czechName: 'Náměstí Republiky & Vánoční trhy',
+      desc: 'A solo 7 minutos caminando desde el restaurante. Primer contacto con los mágicos mercadillos de Navidad checos: casetas de madera, adornos artesanales, dulces trdelník y ambiente festivo.',
+      familyTip: 'Justo al lado está el centro comercial Palladium por si alguien necesita baños cómodos con cambiador o algo de abrigo.',
+      coords: '50.0886,14.4293',
+      mapsQuery: 'Namesti Republiky Prague',
+      completed: false
+    },
+    {
+      id: 'd2-7',
+      day: 2,
+      time: '16:30',
+      title: 'Barrio Judío (Josefov) y Sinagogas Históricas',
+      czechName: 'Židovské město Josefov',
+      desc: 'A 15 minutos a pie desde Plaza de la República. Paseo tranquilo por las calles del barrio judío descubriendo sus seis sinagogas, en especial la Sinagoga Vieja-Nueva (siglo XIII) y la Sinagoga Española, con decoración dorada inspirada en la Alhambra.',
+      familyTip: 'Zona peatonal llana y muy tranquila para pasear cómodamente con el carrito de bebé al caer la tarde.',
+      coords: '50.0903,14.4194',
+      mapsQuery: 'Spanish Synagogue Prague',
+      completed: false
+    },
+    {
+      id: 'd2-8',
+      day: 2,
+      time: '18:30',
+      title: 'Regreso a Malá Strana y Cena relajada',
+      czechName: 'Návrat na Malou Stranu',
+      desc: 'Paseo de vuelta cruzando el río Moldava hacia Malá Strana (~20 min a pie). Cena en los alrededores de nuestro barrio o cena tranquila en el apartamento para descansar tras un día lleno de visitas.',
+      familyTip: 'Cruzad por el puente Mánesův para contemplar el Castillo de Praga y el Puente de Carlos iluminados de noche.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
       completed: false
     },
 
-    // DÍA 3
+    // ========================================================================
+    // DÍA 3: Viernes 27 de noviembre - Castillo de Praga, U Glaubiců & Malá Strana
+    // ========================================================================
     {
       id: 'd3-1',
       day: 3,
       time: '09:30',
-      title: 'Funicular a la Colina de Petřín y la Torre',
-      czechName: 'Lanová dráha na Petřín & Petřínská rozhledna',
-      desc: 'Subida en funicular (incluido en el billete normal de transporte) a la torre inspirada en la Torre Eiffel.',
-      familyTip: 'La torre tiene ascensor disponible si vais con peques o no queréis subir los 299 escalones a pie.',
-      coords: '50.0835,14.3951',
-      mapsQuery: 'Petrin Tower Prague',
+      title: 'Subida al Castillo de Praga (Tranvía 22 o a pie)',
+      czechName: 'Cesta na Pražský hrad (Tramvaj 22)',
+      desc: 'Salida hacia la colina del Castillo. Dos alternativas: caminar 2 minutos hasta la parada de Malostranské náměstí / Újezd y tomar el tranvía 22 directo hasta la parada Pražský hrad (opción muy cómoda para evitar la cuesta con el carro de bebé), o subir caminando por la histórica calle Nerudova (25 min de subida adoquinada).',
+      familyTip: '¡Con el carrito de bebé, tomad el tranvía 22! Os deja en llano justo en la puerta norte del castillo, haciendo toda la visita en suave bajada.',
+      coords: '50.0924,14.3989',
+      mapsQuery: 'Prazsky hrad tram stop Prague',
       completed: false
     },
     {
       id: 'd3-2',
       day: 3,
-      time: '11:00',
-      title: 'Laberinto de Espejos de Petřín',
-      czechName: 'Zrcadlové bludiště na Petříně',
-      desc: 'Pabellón divertido con laberinto de espejos y sala de espejos deformantes para reírse en familia.',
-      familyTip: '¡Plan estrella para niños! Entrada muy económica y garantizadas las risas familiares.',
-      coords: '50.0832,14.3965',
-      mapsQuery: 'Mirror Maze Petrin Prague',
+      time: '10:00',
+      title: '🎟️ Visita Reservada: Castillo de Praga, San Vito y Callejón del Oro',
+      czechName: 'Pražský hrad, Katedrála sv. Víta & Zlatá ulička',
+      desc: '¡Entradas reservadas (válidas para 27 y 28 nov de 9:00 a 15:00 hrs) y audioguías descargadas en los móviles! Visita al complejo monumental más grande del mundo: la colosal Catedral de San Vito y sus vidrieras de Mucha, las casitas de cuento del Callejón del Oro y la Basílica románica de San Jorge.',
+      familyTip: 'El Callejón del Oro fascina a los pequeños con sus diminutas armaduras medievales y la casita de Franz Kafka (nº 22).',
+      coords: '50.0909,14.4005',
+      mapsQuery: 'Prague Castle',
       completed: false
     },
     {
       id: 'd3-3',
       day: 3,
-      time: '13:00',
-      title: 'Parque Infantil en Dětský Ostrov (Isla de los Niños)',
-      czechName: 'Dětský ostrov',
-      desc: 'Una isla en el río Moldava dedicada enteramente a columpios, tirolinas y zonas de juego cerradas.',
-      familyTip: 'Lugar perfecto para que los niños corran a sus anchas mientras los padres descansan con vistas al río.',
-      coords: '50.0789,14.4093',
-      mapsQuery: 'Detsky ostrov Prague',
+      time: '14:00',
+      title: '🍽️ Comida Reservada: Restaurante U Glaubiců',
+      czechName: 'Restaurace U Glaubiců',
+      desc: '¡Mesa reservada a las 14:00 hrs! Bajamos hacia la Plaza de Malá Strana (Malostranské náměstí 266/5). Histórica cervecería y restaurante fundado en el siglo XVI con más de 700 años de historia y bóvedas góticas. Famoso por su auténtica comida checa y precios populares.',
+      familyTip: 'Ambiente muy espacioso en las salas abovedadas, ideal para reponer fuerzas en familia con los niños.',
+      coords: '50.0883,14.4042',
+      mapsQuery: 'U Glaubicu Prague',
       completed: false
     },
     {
       id: 'd3-4',
       day: 3,
-      time: '15:30',
-      title: 'Paseo en Barco Panorámico por el Río Moldava',
-      czechName: 'Plavba lodí po Vltavě',
-      desc: 'Travesía relajada de 50-60 minutos pasando por debajo del Puente de Carlos con audioguía.',
-      familyTip: 'Ideal tras haber caminado por la mañana. Se puede tomar algo a bordo y descansar las piernas.',
-      coords: '50.0883,14.4137',
-      mapsQuery: 'Prague River Cruise Pier',
+      time: '15:45',
+      title: 'Paseo por Malá Strana, Calle Nerudova y San Nicolás',
+      czechName: 'Malostranské náměstí & Kostel sv. Mikuláše',
+      desc: 'Exploración de Malá Strana: la Plaza Pequeña presidida por la majestuosa Iglesia barroca de San Nicolás y la Columna de la Peste, y la famosa Calle Nerudova con sus casas históricas decoradas con antiguos emblemas (como la casa nº 47 de Jan Neruda).',
+      familyTip: 'Jugar con los niños a buscar los emblemas en las fachadas: Los Dos Soles, El León Rojo, El Cisne Blanco...',
+      coords: '50.0881,14.4024',
+      mapsQuery: 'St Nicholas Church Mala Strana Prague',
+      completed: false
+    },
+    {
+      id: 'd3-5',
+      day: 3,
+      time: '17:15',
+      title: 'Muro de John Lennon y paseo por la Isla de Kampa',
+      czechName: 'Lennonova zeď & Ostrov Kampa',
+      desc: 'Paseo por el colorido y fotogénico Muro de John Lennon, lleno de grafitis y símbolos de paz, seguido de un relajante paseo por el parque de la Isla de Kampa, bordeando el canal Čertovka (la Pequeña Venecia de Praga).',
+      familyTip: 'La Isla de Kampa es llana, peatonal y tiene zonas de césped y bancos muy tranquilos junto al agua para que los niños jueguen.',
+      coords: '50.0862,14.4069',
+      mapsQuery: 'Lennon Wall Prague',
       completed: false
     },
 
-    // DÍA 4
+    // ========================================================================
+    // DÍA 4: Sábado 28 de noviembre - Ciudad Nueva, Pork's, Barco & U Tří jelínků
+    // ========================================================================
     {
       id: 'd4-1',
       day: 4,
       time: '10:00',
-      title: 'Fortaleza Medieval de Vyšehrad',
-      czechName: 'Vyšehrad',
-      desc: 'Antigua fortaleza con murallas sobre el acantilado del río, jardines verdes, esculturas y paz absoluta.',
-      familyTip: 'Tiene un parque infantil fantástico de madera basado en antiguas leyendas checas.',
-      coords: '50.0644,14.4199',
-      mapsQuery: 'Vysehrad Prague',
-      completed: false
-    },
-    {
-      id: 'd4-2',
-      day: 4,
-      time: '12:30',
-      title: 'La Casa Danzante (Ginger & Fred)',
-      czechName: 'Tančící dům',
-      desc: 'El famoso edificio deconstructivista de Frank Gehry junto al río que simula una pareja bailando.',
-      familyTip: 'Haceros una foto familiar haciendo poses divertidas simulando sostener el edificio inclinado.',
+      title: 'Ciudad Nueva: La Casa Danzante (Ginger & Fred)',
+      czechName: 'Tančící dům (Nové Město)',
+      desc: 'Comenzamos el día en la Ciudad Nueva bordeando el río Moldava para admirar el célebre edificio vanguardista diseñado por Frank Gehry y Vlado Milunić que simula una pareja en pleno baile.',
+      familyTip: '¡Momento foto divertida! Colocarse desde la acera de enfrente simulando empujar o sostener la fachada inclinada.',
       coords: '50.0754,14.4141',
       mapsQuery: 'Dancing House Prague',
       completed: false
     },
     {
+      id: 'd4-2',
+      day: 4,
+      time: '11:15',
+      title: 'Cabeza Giratoria de Franz Kafka',
+      czechName: 'Hlava Franze Kafky',
+      desc: 'Sorprendente escultura cinética gigante de David Černý compuesta por 42 placas de acero inoxidable que rotan de forma hipnótica y continua sobre sí mismas.',
+      familyTip: 'A los niños les hipnotiza ver girar las capas del rostro y buscar su propio reflejo metálico.',
+      coords: '50.0815,14.4206',
+      mapsQuery: 'Franz Kafka Statue Charvatova Prague',
+      completed: false
+    },
+    {
       id: 'd4-3',
       day: 4,
-      time: '14:30',
-      title: 'Plaza de Wenceslao y Compras de Recuerdos',
-      czechName: 'Václavské náměstí',
-      desc: 'Gran avenida histórica con tiendas, marionetas de madera tradicionales y el Museo Nacional.',
-      familyTip: 'Visitar la juguetería Hamleys (Na Příkopě 14) con su tiovivo veneciano interior y tobogán gigante.',
-      coords: '50.0822,14.4267',
+      time: '12:00',
+      title: 'Plaza de Wenceslao, Museo Nacional y Mercado Navideño',
+      czechName: 'Václavské náměstí & Národní muzeum',
+      desc: 'Paseo por el corazón comercial e histórico de Praga: la gran avenida de Wenceslao presidida por la estatua ecuestre y el imponente Museo Nacional neorrenacentista, ambientada con mercadillo navideño.',
+      familyTip: 'Ambiente navideño animado. Muy cerca está la juguetería Hamleys con carrusel si se quiere hacer una parada sorpresa para los peques.',
+      coords: '50.0813,14.4277',
       mapsQuery: 'Wenceslas Square Prague',
       completed: false
     },
     {
       id: 'd4-4',
       day: 4,
-      time: '16:30',
-      title: 'Merienda de despedida en el Café Slavia',
-      czechName: 'Kavárna Slavia',
-      desc: 'Café histórico de techos altos frente al Teatro Nacional con tartas exquisitas y vistas al castillo iluminado.',
-      familyTip: 'Probad la tarta de manzana (Jablečný závin) con chocolate caliente para cerrar el viaje.',
-      coords: '50.0818,14.4135',
-      mapsQuery: 'Cafe Slavia Prague',
+      time: '13:45',
+      title: '🍽️ Comida Reservada: Restaurante Pork\'s Vodičkova',
+      czechName: 'Restaurace Pork\'s Vodičkova',
+      desc: '¡Mesa reservada a las 13:45 hrs! Situado en Vodičkova 17 (a dos pasos de la Plaza de Wenceslao). Local moderno y aclamado, famoso en toda Praga por servir el mejor codillo de cerdo asado super crujiente por fuera y tierno por dentro, además de excelentes opciones checas.',
+      familyTip: 'El codillo es enorme, ideal para pedir al centro y compartir entre varios con mostaza y rábano picante.',
+      coords: '50.0799,14.4239',
+      mapsQuery: 'Porks Vodickova Prague',
+      completed: false
+    },
+    {
+      id: 'd4-5',
+      day: 4,
+      time: '17:00',
+      title: '🎟️ Paseo en Barco Reservado por el Río Moldava (Iluminación Navideña)',
+      czechName: 'Plavba lodí po Vltavě (Slavnostní osvětlení)',
+      desc: '¡Entradas reservadas a las 17:00 hrs! Travesía en barco cubierta y climatizada por el río Moldava. Hoy es el gran día de la inauguración oficial del encendido navideño de Praga, por lo que contemplaremos los puentes y monumentos iluminados reflejándose en las aguas del río.',
+      familyTip: 'Barco cerrado y con calefacción. Plan super relajante para descansar los pies tras caminar, tomar un chocolate caliente a bordo y disfrutar de las vistas.',
+      coords: '50.0883,14.4137',
+      mapsQuery: 'Prague River Cruise Pier',
+      completed: false
+    },
+    {
+      id: 'd4-6',
+      day: 4,
+      time: '18:30',
+      title: 'Encendido del Gran Árbol de Navidad en la Plaza Vieja',
+      czechName: 'Rozsvícení vánočního stromu na Staroměstském náměstí',
+      desc: 'Paseo hasta la Plaza de la Ciudad Vieja para admirar el gigantesco árbol de Navidad de Praga recién iluminado con miles de luces y música, junto a los puestos de artesanía y repostería.',
+      familyTip: 'Es uno de los momentos más mágicos del viaje. Mantened a los niños bien cerquita o en el carro por las aglomeraciones festivas.',
+      coords: '50.0870,14.4208',
+      mapsQuery: 'Old Town Square Christmas Tree Prague',
+      completed: false
+    },
+    {
+      id: 'd4-7',
+      day: 4,
+      time: '20:30',
+      title: '🍽️ Cena Reservada: Restaurante U Tří jelínků',
+      czechName: 'Restaurace U Tří jelínků',
+      desc: '¡Mesa reservada a las 20:30 hrs! Ubicado en la calle Nerudova 206/4, en Malá Strana. Acogedor y elegante restaurante tradicional de comida checa e internacional ("Los Tres Ciervos") en un edificio histórico con techos de madera y chimenea. Broche de oro para el último sábado.',
+      familyTip: 'A pocos minutos a pie de nuestro apartamento en Malá Strana, por lo que tras cenar estaremos al lado de casa para que los niños duerman tranquilamente.',
+      coords: '50.0886,14.4007',
+      mapsQuery: 'U Tri jelinku Prague',
+      completed: false
+    },
+
+    // ========================================================================
+    // DÍA 5: Domingo 29 de noviembre - Despedida, Traslado & Vuelo a Madrid
+    // ========================================================================
+    {
+      id: 'd5-1',
+      day: 5,
+      time: '09:30',
+      title: 'Desayuno familiar y preparación de equipaje',
+      czechName: 'Poslední snídaně a balení',
+      desc: 'Desayunamos con tranquilidad en nuestro amplio apartamento de Vítězná 18, empaquetamos maletas y dejamos todo listo para el check-out.',
+      familyTip: 'Repasar el checklist de la maleta en la app para asegurarse de no olvidar cargadores, peluches infantiles ni documentos.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
+      completed: false
+    },
+    {
+      id: 'd5-2',
+      day: 5,
+      time: '11:00',
+      title: 'Último paseo y despedida de Malá Strana',
+      czechName: 'Rozloučení s Malou Stranou',
+      desc: 'Último paseo corto por los alrededores de Malá Strana o un café tranquilo junto al apartamento antes de la llegada del vehículo de recogida.',
+      familyTip: 'Aprovechar para comprar los últimos recuerdos o snacks ligeros para el vuelo.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
+      completed: false
+    },
+    {
+      id: 'd5-3',
+      day: 5,
+      time: '12:00',
+      title: '🚐 Recogida en Monovolumen Grande hacia el Aeropuerto',
+      czechName: 'Transfer na letiště Václava Havla',
+      desc: 'El monovolumen grande privado nos recoge en la puerta de Vítězná 18 a las 12:00 en punto para trasladar a los 7 viajeros y el equipaje cómodamente al aeropuerto Václav Havel (T2).',
+      familyTip: 'Llegada prevista al aeropuerto sobre las 12:45 hrs, con 2h 20m de antelación holgada para facturar las 6 maletas y pasar el control de seguridad con el bebé sin prisas.',
+      coords: '50.0816,14.4061',
+      mapsQuery: 'Vítězná 18 Malá Strana Prague',
+      completed: false
+    },
+    {
+      id: 'd5-4',
+      day: 5,
+      time: '15:05',
+      title: 'Vuelo de Regreso: Praga (PRG) → Madrid (MAD)',
+      czechName: 'Let Ryanair FR3613 do Madridu',
+      desc: 'Vuelo Ryanair FR3613 desde la Terminal 2 de Praga Václav Havel a las 15:05 hrs. Llegada prevista a Madrid Barajas T1 a las 18:10 hrs.',
+      familyTip: 'Tener a mano juguetes y snacks para el entretenimiento de los pequeños durante las 3 horas de vuelo.',
+      coords: '50.1008,14.2600',
+      mapsQuery: 'Vaclav Havel Airport Prague',
+      completed: false
+    },
+    {
+      id: 'd5-5',
+      day: 5,
+      time: '18:45',
+      title: 'Llegada a Madrid y Regreso a Casa en Uber',
+      czechName: 'Přílet do Madridu a odvoz domů',
+      desc: 'Recogida de equipajes facturados y traslado en Uber contratado desde la T1 de Barajas de vuelta a casa. ¡Fin de un viaje familiar inolvidable!',
+      familyTip: 'Disfrutar recordando las mejores fotos y momentos vividos juntos en Praga.',
+      coords: '40.4983,-3.5676',
+      mapsQuery: 'Madrid Barajas Airport Terminal 1',
       completed: false
     }
   ],
   places: [
+    // Restaurantes
+    {
+      name: 'Lokál Dlouhááá',
+      cz: 'Lokál Dlouhááá',
+      category: 'restaurant',
+      tags: ['🍽️ Restaurante', 'Comida Tradicional', 'Pilsner Urquell'],
+      desc: 'Famosa cervecería y restaurante checo en la Ciudad Vieja. Cocina casera con ingredientes frescos y cerveza de tanque recién tirada.',
+      familyTip: 'Local amplio y muy tolerante con carritos y niños. Servicio muy rápido.',
+      coords: '50.0906,14.4258',
+      mapsQuery: 'Lokal Dlouhaaa'
+    },
+    {
+      name: 'U Glaubiců',
+      cz: 'Restaurace U Glaubiců',
+      category: 'restaurant',
+      tags: ['🍽️ Restaurante', 'Histórico', 'Malá Strana'],
+      desc: 'Cervecería histórica en Malá Strana con más de 700 años de historia en bodegas abovedadas góticas. Precios populares.',
+      familyTip: 'Salones espaciosos bajo tierra ideales para comer tranquilos tras visitar el castillo.',
+      coords: '50.0883,14.4042',
+      mapsQuery: 'U Glaubicu'
+    },
+    {
+      name: 'Pork\'s Vodičkova',
+      cz: 'Pork\'s Vodičkova',
+      category: 'restaurant',
+      tags: ['🍽️ Restaurante', 'Codillo Asado', 'Nové Město'],
+      desc: 'Aclamado en toda Praga por su insuperable codillo de cerdo asado super crujiente y tierno. Muy cerca de Wenceslao.',
+      familyTip: 'El codillo es enorme, idóneo para compartir al centro de la mesa con los niños.',
+      coords: '50.0799,14.4239',
+      mapsQuery: 'Porks Vodickova'
+    },
+    {
+      name: 'U Tří jelínků',
+      cz: 'U Tří jelínků (Los Tres Ciervos)',
+      category: 'restaurant',
+      tags: ['🍽️ Restaurante', 'Cena Especial', 'Malá Strana'],
+      desc: 'Restaurante tradicional con encanto en la calle Nerudova con techos de madera y chimenea. A pasos de nuestro apartamento.',
+      familyTip: 'Perfecto para una cena relajada al lado de casa la última noche.',
+      coords: '50.0886,14.4007',
+      mapsQuery: 'U Tri jelinku'
+    },
+
+    // Monumentos & Visitas
+    {
+      name: 'Torre Klementinum y Biblioteca Barroca',
+      cz: 'Klementinum',
+      category: 'monument',
+      tags: ['⭐ Imprescindible', 'Visita Guiada', 'Vistas 360°'],
+      desc: 'Una de las bibliotecas más impresionantes del mundo, Salón Meridiano y Torre Astronómica.',
+      familyTip: 'Entrada reservada para el Jueves 26 a las 11:00 hrs.',
+      coords: '50.0866,14.4160',
+      mapsQuery: 'Klementinum'
+    },
     {
       name: 'Puente de Carlos',
       cz: 'Karlův most',
       category: 'monument',
       tags: ['⭐ Imprescindible', 'Vistas', 'Paseo'],
-      desc: 'El icono de Praga. Construido en 1357, flanqueado por 30 estatuas barrocas.',
-      familyTip: 'Id temprano (antes de las 9:30) o al atardecer para evitar aglomeraciones.',
+      desc: 'El icono de Praga. Construido en 1357, flanqueado por 30 estatuas barrocas sobre el Moldava.',
+      familyTip: 'Id temprano por la mañana o al atardecer para fotos familiares despejadas.',
       coords: '50.0865,14.4114',
       mapsQuery: 'Charles Bridge'
     },
@@ -316,9 +621,19 @@ const defaultData = {
       category: 'castle',
       tags: ['⭐ Imprescindible', '🏰 Castillo'],
       desc: 'El mayor complejo palaciego medieval del mundo. La Catedral de San Vito corta la respiración.',
-      familyTip: 'Subir en tranvía 22 y bajar a pie por las escaleras viejas del castillo.',
+      familyTip: 'Subir en el tranvía 22 directo a la parada Pražský hrad para evitar la cuesta con el carro de bebé.',
       coords: '50.0909,14.4005',
       mapsQuery: 'Prague Castle'
+    },
+    {
+      name: 'Callejón del Oro',
+      cz: 'Zlatá ulička',
+      category: 'castle',
+      tags: ['🏰 Castillo', 'Cuento', 'Niños'],
+      desc: 'Calle diminuta empotrada en las murallas del castillo con casas de colores y armaduras medievales.',
+      familyTip: 'A los pequeños les fascina ver las armaduras y las casitas diminutas de artesanos.',
+      coords: '50.0919,14.4039',
+      mapsQuery: 'Golden Lane Prague Castle'
     },
     {
       name: 'Reloj Astronómico y Plaza Vieja',
@@ -326,119 +641,115 @@ const defaultData = {
       category: 'monument',
       tags: ['⭐ Imprescindible', 'Niños'],
       desc: 'Reloj astronómico medieval del año 1410 con desfile de apóstoles en cada hora.',
-      familyTip: 'A los niños les encanta ver al esqueleto tocar la campana.',
+      familyTip: 'A los niños les encanta ver al esqueleto tocar la campana y cantar el gallo.',
       coords: '50.0870,14.4208',
       mapsQuery: 'Prague Astronomical Clock'
     },
     {
-      name: 'Dětský Ostrov (Isla de los Niños)',
-      cz: 'Dětský ostrov',
-      category: 'kids',
-      tags: ['👶 Ideal Niños', 'Parque', 'Relax'],
-      desc: 'Isla fluvial con recintos vallados de juegos divididos por edades, columpios y bancos.',
-      familyTip: 'Entrada gratuita. Ideal para recargar energía a mitad del viaje.',
-      coords: '50.0789,14.4093',
-      mapsQuery: 'Detsky Ostrov Prague'
+      name: 'Barrio Judío (Josefov) & Sinagoga Española',
+      cz: 'Židovské město Josefov',
+      category: 'monument',
+      tags: ['⭐ Imprescindible', 'Historia', 'Paseo'],
+      desc: 'Recorrido histórico por las seis sinagogas judías, destacando la Sinagoga Española inspirada en la Alhambra.',
+      familyTip: 'Zona peatonal llana y muy tranquila para pasear cómodamente con el carro.',
+      coords: '50.0903,14.4194',
+      mapsQuery: 'Spanish Synagogue Prague'
     },
     {
-      name: 'Laberinto de Espejos de Petřín',
-      cz: 'Zrcadlové bludiště',
-      category: 'kids',
-      tags: ['👶 Ideal Niños', 'Divertido'],
-      desc: 'Castillo de madera con laberinto de espejos y sala de risas con espejos cóncavos y convexos.',
-      familyTip: 'Los niños querrán repetir la sala de espejos deformantes varias veces.',
-      coords: '50.0832,14.3965',
-      mapsQuery: 'Mirror Maze Petrin'
-    },
-    {
-      name: 'Colina de Petřín y Funicular',
-      cz: 'Petřínské sady',
+      name: 'Paseo en Barco por el Río Moldava',
+      cz: 'Plavba lodí po Vltavě',
       category: 'views',
-      tags: ['🌆 Miradores', 'Naturaleza'],
-      desc: 'El pulmón verde de Praga con rosaledas, la torre panorámica y el histórico funicular.',
-      familyTip: 'El billete normal de transporte de Praga de 24h/72h cubre el funicular.',
-      coords: '50.0835,14.3951',
-      mapsQuery: 'Petrin Tower'
+      tags: ['🚢 Barco', 'Luces de Navidad', '👶 Ideal Niños'],
+      desc: 'Travesía fluvial cubierta y climatizada viendo los puentes y monumentos iluminados.',
+      familyTip: 'Entradas reservadas el Sábado 28 a las 17:00 hrs para ver el encendido navideño.',
+      coords: '50.0883,14.4137',
+      mapsQuery: 'Prague River Cruise Pier'
     },
     {
-      name: 'Jardín Wallenstein',
-      cz: 'Valdštejnská zahrada',
-      category: 'castle',
-      tags: ['🏰 Castillo & Malá Strana', 'Peces y Pavos'],
-      desc: 'Jardín barroco espectacular con pavos reales albinos paseando libres y estanque con carpas gigantes.',
-      familyTip: 'Entrada gratuita (abierto de abril a octubre). A los niños les chifla ver los pavos reales.',
-      coords: '50.0901,14.4055',
-      mapsQuery: 'Wallenstein Garden Prague'
-    },
-    {
-      name: 'Callejón del Oro',
-      cz: 'Zlatá ulička',
-      category: 'castle',
-      tags: ['🏰 Castillo', 'Cuento'],
-      desc: 'Calle diminuta empotrada en las murallas del castillo con casas de colores y armaduras.',
-      familyTip: 'A partir de las 17:00 (o 16:00 en invierno) el acceso a la calle suele ser gratis.',
-      coords: '50.0919,14.4039',
-      mapsQuery: 'Golden Lane Prague Castle'
-    },
-    {
-      name: 'Juguetería Hamleys Praga',
-      cz: 'Hamleys Praha',
-      category: 'kids',
-      tags: ['👶 Ideal Niños', 'Compras'],
-      desc: 'Mucho más que una tienda: tiene un carrusel veneciano, tobogán gigante, LEGO y mariposario.',
-      familyTip: '¡Ideal si llueve o hace frío! Está en la calle peatonal Na Příkopě.',
-      coords: '50.0850,14.4277',
-      mapsQuery: 'Hamleys Prague'
-    },
-    {
-      name: 'Fortaleza de Vyšehrad',
-      cz: 'Vyšehrad',
+      name: 'La Casa Danzante (Ginger & Fred)',
+      cz: 'Tančící dům',
       category: 'views',
-      tags: ['🌆 Miradores', 'Historia', 'Parque'],
-      desc: 'Fortaleza sobre la roca con las mejores vistas del río, sin aglomeraciones de turistas.',
-      familyTip: 'Caminata muy agradable con parque infantil de madera tematizado.',
-      coords: '50.0644,14.4199',
-      mapsQuery: 'Vysehrad'
+      tags: ['Arquitectura', 'Río'],
+      desc: 'Edificio vanguardista de Frank Gehry junto al río Moldava que simula una pareja bailando.',
+      familyTip: 'Haceros una foto familiar haciendo poses divertidas como si empujarais la fachada.',
+      coords: '50.0754,14.4141',
+      mapsQuery: 'Dancing House'
+    },
+    {
+      name: 'Cabeza Giratoria de Franz Kafka',
+      cz: 'Hlava Franze Kafky',
+      category: 'monument',
+      tags: ['👶 Ideal Niños', 'Escultura', 'Arte'],
+      desc: 'Escultura cinética monumental de David Černý con 42 bloques de espejo que rotan sin parar.',
+      familyTip: 'A los niños les hipnotiza ver recomponerse las facciones del rostro.',
+      coords: '50.0815,14.4206',
+      mapsQuery: 'Franz Kafka Statue Charvatova Prague'
+    },
+    {
+      name: 'Plaza de Wenceslao y Museo Nacional',
+      cz: 'Václavské náměstí',
+      category: 'monument',
+      tags: ['Mercadillo Navideño', 'Historia'],
+      desc: 'Gran avenida histórica con la estatua de San Wenceslao, el Museo Nacional y mercadillo navideño.',
+      familyTip: 'Ambiente navideño con casetas de madera y luces.',
+      coords: '50.0813,14.4277',
+      mapsQuery: 'Wenceslas Square Prague'
     },
     {
       name: 'Muro de John Lennon',
       cz: 'Lennonova zeď',
       category: 'monument',
       tags: ['Música', 'Fotos', 'Arte'],
-      desc: 'Símbolo de libertad y paz decorado con letras de canciones de The Beatles.',
-      familyTip: 'En el pequeño puente contiguo suele haber patos en el canal del molino del Gran Prior.',
+      desc: 'Símbolo de libertad y paz decorado con grafitis, letras de The Beatles y arte urbano.',
+      familyTip: 'En el pequeño puente contiguo suele haber patos en el canal del molino.',
       coords: '50.0862,14.4069',
       mapsQuery: 'Lennon Wall'
     },
     {
-      name: 'Casa Danzante',
-      cz: 'Tančící dům',
+      name: 'Isla de Kampa',
+      cz: 'Ostrov Kampa',
       category: 'views',
-      tags: ['Arquitectura', 'Río'],
-      desc: 'Curioso edificio moderno que contrasta con el barroco y gótico de la ciudad.',
-      familyTip: 'En la planta superior hay una cafetería con mirador 360º al río y al castillo.',
-      coords: '50.0754,14.4141',
-      mapsQuery: 'Dancing House'
+      tags: ['Parque', 'Paseo', '👶 Ideal Niños'],
+      desc: 'Isla fluvial con parques verdes, vistas al Puente de Carlos y el canal Čertovka.',
+      familyTip: 'Zona llana y muy segura para que los niños caminen a sus anchas.',
+      coords: '50.0862,14.4080',
+      mapsQuery: 'Kampa Island Prague'
+    },
+    {
+      name: 'Torre de la Pólvora y Calle Celetná',
+      cz: 'Prašná brána',
+      category: 'monument',
+      tags: ['⭐ Imprescindible', 'Historia'],
+      desc: 'Imponente puerta gótica medieval del siglo XV que marcaba el inicio del Camino Real.',
+      familyTip: 'Al lado está la preciosa Casa Municipal y la entrada al casco histórico.',
+      coords: '50.0872,14.4278',
+      mapsQuery: 'Powder Tower Prague'
     }
   ],
   checklist: [
-    { id: 'c1', cat: 'Documentos', text: 'DNI / Pasaportes de toda la familia en vigor', checked: true },
-    { id: 'c2', cat: 'Documentos', text: 'Tarjeta Sanitaria Europea (TSE) de cada miembro', checked: true },
-    { id: 'c3', cat: 'Documentos', text: 'Tarjetas sin comisiones de cambio (ej. Revolut, N26)', checked: true },
-    { id: 'c4', cat: 'Documentos', text: 'Billetes de avión y reserva de hotel descargados offline', checked: false },
-    { id: 'c5', cat: 'Salud', text: 'Botiquín infantil (Apiretal / Dalsy / Termómetro)', checked: false },
-    { id: 'c6', cat: 'Salud', text: 'Tiritas para rozaduras de caminar', checked: false },
-    { id: 'c7', cat: 'Salud', text: 'Toallitas húmedas y gel hidroalcohólico', checked: false },
-    { id: 'c8', cat: 'Ropa', text: 'Calzado cómodo y con buena suela para adoquines', checked: false },
-    { id: 'c9', cat: 'Ropa', text: 'Chubasquero o paraguas plegable ligero', checked: false },
-    { id: 'c10', cat: 'Ropa', text: 'Capas de abrigo según la estación (forro polar/cortavientos)', checked: false },
-    { id: 'c11', cat: 'Tecnología', text: 'Batería externa móvil (Powerbank) para todo el día', checked: false },
-    { id: 'c12', cat: 'Tecnología', text: 'Cables cargadores para todos los teléfonos', checked: false },
-    { id: 'c13', cat: 'Tecnología', text: 'Descargar mapa offline de Praga en Google Maps', checked: false },
-    { id: 'c14', cat: 'Especial Niños', text: 'Carrito de paseo ligero y plegable (o mochila portabebé)', checked: false },
-    { id: 'c15', cat: 'Especial Niños', text: 'Botella de agua térmica reutilizable para rellenar', checked: false },
-    { id: 'c16', cat: 'Especial Niños', text: 'Snacks para excursiones (frutos secos, galletas)', checked: false },
-    { id: 'c17', cat: 'Especial Niños', text: 'Cuaderno y pinturas para esperas en restaurantes', checked: false }
+    { id: 'c1', cat: 'Documentos', text: 'DNI / Pasaportes de toda la familia en vigor (6 adultos + 1 bebé)', checked: true },
+    { id: 'c2', cat: 'Documentos', text: 'Tarjeta Sanitaria Europea (TSE) de cada miembro de la familia', checked: true },
+    { id: 'c3', cat: 'Documentos', text: 'Tarjetas bancarias sin comisión (Revolut, N26 o similares)', checked: true },
+    { id: 'c4', cat: 'Documentos', text: 'Tarjetas de embarque Ryanair descargadas offline (Ida FR2766 / Vuelta FR3613)', checked: false },
+    { id: 'c5', cat: 'Documentos', text: 'Reserva del Apartamento guardada (Large Historic Home - Vítězná 18)', checked: true },
+    { id: 'c6', cat: 'Documentos', text: 'Entradas Torre Klementinum descargadas (Jueves 26 a las 11:00 hrs)', checked: false },
+    { id: 'c7', cat: 'Documentos', text: 'Entradas Castillo de Praga (San Vito, Callejón del Oro, San Jorge) listas', checked: false },
+    { id: 'c8', cat: 'Documentos', text: 'Audioguías del Castillo descargadas en los teléfonos móviles', checked: false },
+    { id: 'c9', cat: 'Documentos', text: 'Entradas Paseo en Barco Navideño descargadas (Sábado 28 a las 17:00 hrs)', checked: false },
+    { id: 'c10', cat: 'Documentos', text: 'Confirmación de traslado en Monovolumen grande para los 7 viajeros', checked: true },
+    { id: 'c11', cat: 'Salud', text: 'Botiquín infantil (Apiretal / Dalsy / Termómetro para Lizara)', checked: false },
+    { id: 'c12', cat: 'Salud', text: 'Tiritas para rozaduras de caminar y apósitos para ampollas', checked: false },
+    { id: 'c13', cat: 'Salud', text: 'Toallitas húmedas y gel hidroalcohólico', checked: false },
+    { id: 'c14', cat: 'Ropa', text: 'Calzado cómodo y con suela aislante para los adoquines fríos de Praga', checked: false },
+    { id: 'c15', cat: 'Ropa', text: 'Ropa térmica de abrigo (camisetas térmicas, forros polares, abrigos)', checked: false },
+    { id: 'c16', cat: 'Ropa', text: 'Guantes, gorros de lana y bufandas para todos', checked: false },
+    { id: 'c17', cat: 'Tecnología', text: 'Baterías externas (Powerbanks) cargadas para aguantar todo el día', checked: false },
+    { id: 'c18', cat: 'Tecnología', text: 'Cables cargadores para todos los teléfonos móviles', checked: false },
+    { id: 'c19', cat: 'Tecnología', text: 'Descargar mapa offline de Praga en Google Maps', checked: false },
+    { id: 'c20', cat: 'Especial Niños', text: 'Carrito de paseo plegable para Lizara (embarque gratuito en Ryanair)', checked: false },
+    { id: 'c21', cat: 'Especial Niños', text: 'Saco térmico de abrigo o manta para el carrito de bebé', checked: false },
+    { id: 'c22', cat: 'Especial Niños', text: 'Biberones, chupetes y comida / leche para el viaje', checked: false },
+    { id: 'c23', cat: 'Especial Niños', text: 'Snacks y galletitas para las excursiones a pie', checked: false }
   ],
   phrases: [
     { cz: 'Ahoj', phonetic: 'a-hoy', es: 'Hola / Adiós (informal, con niños)' },
@@ -461,17 +772,32 @@ function loadState() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      if (parsed.trip && parsed.trip.flights && typeof parsed.trip.flights.outbound === 'string') {
-        parsed.trip.flights = defaultData.trip.flights;
-      }
-      if (parsed.trip && parsed.trip.hotel && (!parsed.trip.hotel.name || parsed.trip.hotel.name.includes('Bohemia'))) {
-        parsed.trip.hotel = defaultData.trip.hotel;
-      }
       return { ...defaultData, ...parsed };
     } catch (e) {
       console.warn('Error loading state, using defaults', e);
     }
   }
+
+  // Smooth migration from v1 preserving checked items
+  const v1Saved = localStorage.getItem('praga_familia_data_v1');
+  if (v1Saved) {
+    try {
+      const oldParsed = JSON.parse(v1Saved);
+      const initial = JSON.parse(JSON.stringify(defaultData));
+      if (oldParsed.checklist && Array.isArray(oldParsed.checklist)) {
+        oldParsed.checklist.forEach(oldItem => {
+          if (oldItem.id && oldItem.id.startsWith('task-')) {
+            initial.checklist.push(oldItem);
+          } else {
+            const match = initial.checklist.find(c => c.id === oldItem.id);
+            if (match) match.checked = oldItem.checked;
+          }
+        });
+      }
+      return initial;
+    } catch (e) {}
+  }
+
   return JSON.parse(JSON.stringify(defaultData));
 }
 
@@ -615,10 +941,11 @@ function renderItinerary() {
 
   // Day Summaries
   const summaries = {
-    1: { title: 'Día 1: Ciudad Vieja y Barrio Judío', desc: 'Recorrido a pie por las callejuelas medievales, Reloj Astronómico y trdelník.' },
-    2: { title: 'Día 2: Castillo de Praga y Malá Strana', desc: 'Subida en el histórico Tranvía 22, Callejón del Oro, Muro Lennon y Puente de Carlos.' },
-    3: { title: 'Día 3: Funicular, Espejos y Río Moldava', desc: 'Colina Petřín con laberinto divertido, la Isla de los Niños y paseo en barco.' },
-    4: { title: 'Día 4: Fortaleza de Vyšehrad y Compras', desc: 'Vistas panorámicas espectaculares, Casa Danzante y juguetería Hamleys.' }
+    1: { title: 'Día 1: Llegada, Apartamento & Supermercado (25 Nov)', desc: 'Vuelo directo desde Madrid, traslado privado en monovolumen a Malá Strana, check-in en el apartamento y compra de provisiones en el Mini Market.' },
+    2: { title: 'Día 2: Klementinum, Ciudad Vieja, Lokál & Barrio Judío (26 Nov)', desc: 'Puente de Carlos, visita a la Biblioteca Barroca, Torre de la Pólvora, comida en Lokál Dlouhááá, mercadillo navideño y sinagogas.' },
+    3: { title: 'Día 3: Castillo de Praga, U Glaubiců & Malá Strana (27 Nov)', desc: 'Subida en Tranvía 22, San Vito y Callejón del Oro con audioguías, comida en U Glaubiců, calle Nerudova, Muro Lennon y Kampa.' },
+    4: { title: 'Día 4: Ciudad Nueva, Pork\'s, Crucero Navideño & U Tří jelínků (28 Nov)', desc: 'Casa Danzante, Cabeza de Kafka, Plaza Wenceslao, codillo en Pork\'s, barco iluminado y encendido del Árbol de Navidad.' },
+    5: { title: 'Día 5: Despedida, Traslado en Monovolumen & Vuelo de Vuelta (29 Nov)', desc: 'Último desayuno, recogida privada en monovolumen a las 12:00 hacia el aeropuerto de Praga y vuelo FR3613 de vuelta a Madrid.' }
   };
 
   if (summaries[day]) {
@@ -786,6 +1113,7 @@ function renderPlaces() {
             if (tag.includes('Imprescindible')) cls += ' tag-highlight';
             else if (tag.includes('Niños')) cls += ' tag-kids';
             else if (tag.includes('Miradores') || tag.includes('Vistas')) cls += ' tag-view';
+            else if (tag.includes('Restaurante')) cls += ' tag-resto';
             return `<span class="${cls}">${tag}</span>`;
           }).join('')}
         </div>
@@ -1187,8 +1515,8 @@ function renderBookings() {
 
   if (hName) hName.textContent = h.name;
   if (hAddress) hAddress.textContent = h.address;
-  if (hPhone) hPhone.textContent = h.phone;
-  if (hRef) hRef.textContent = h.bookingRef;
+  if (hPhone) hPhone.textContent = h.phone ? `${h.phone} (Ana Cristina: ${h.email || 'amenjibar@gmail.com'})` : '+420 776 815 651';
+  if (hRef) hRef.textContent = `${h.bookingRef} • ${h.price || '1.273,70 €'} (${h.features || 'Apartamento 110 m²'})`;
   if (hNotes) hNotes.textContent = h.notes;
 
   const btnMapsHotel = document.getElementById('btn-hotel-maps');
@@ -1203,7 +1531,7 @@ function renderBookings() {
 
   const btnCallHotel = document.getElementById('btn-hotel-call');
   if (btnCallHotel) {
-    btnCallHotel.href = `tel:${h.phone.replace(/\s+/g, '')}`;
+    btnCallHotel.href = `tel:${(h.phone || '+420776815651').replace(/\s+/g, '')}`;
   }
 
   // Render Ryanair Flights
@@ -1223,16 +1551,16 @@ function renderBookings() {
   const elOutSeats = document.getElementById('flight-out-seats');
   const elOutTerminal = document.getElementById('flight-out-terminal');
 
-  if (elOutNo) elOutNo.textContent = out.flightNo || 'FR 2056';
+  if (elOutNo) elOutNo.textContent = out.flightNo || 'FR2766';
   if (elOutOrigCode) elOutOrigCode.textContent = out.origCode || 'MAD';
   if (elOutOrigName) elOutOrigName.textContent = out.origName || 'Madrid';
-  if (elOutDepTime) elOutDepTime.textContent = out.depTime || '06:45';
-  if (elOutDate) elOutDate.textContent = out.date || 'Viernes';
+  if (elOutDepTime) elOutDepTime.textContent = out.depTime || '15:05';
+  if (elOutDate) elOutDate.textContent = out.date || 'Miércoles, 25 Nov';
   if (elOutDestCode) elOutDestCode.textContent = out.destCode || 'PRG';
   if (elOutDestName) elOutDestName.textContent = out.destName || 'Praga';
-  if (elOutArrTime) elOutArrTime.textContent = out.arrTime || '09:40';
-  if (elOutSeats) elOutSeats.textContent = out.seats || 'Por asignar';
-  if (elOutTerminal) elOutTerminal.textContent = out.terminal || 'T1 → T2 (Praga)';
+  if (elOutArrTime) elOutArrTime.textContent = out.arrTime || '18:10';
+  if (elOutSeats) elOutSeats.textContent = out.seats || 'Gratis en Check-in';
+  if (elOutTerminal) elOutTerminal.textContent = out.terminal || 'T1 (Madrid) → T2 (Praga)';
 
   // Inbound
   const ret = f.inbound || {};
@@ -1247,19 +1575,77 @@ function renderBookings() {
   const elInSeats = document.getElementById('flight-in-seats');
   const elInTerminal = document.getElementById('flight-in-terminal');
 
-  if (elInNo) elInNo.textContent = ret.flightNo || 'FR 2057';
+  if (elInNo) elInNo.textContent = ret.flightNo || 'FR3613';
   if (elInOrigCode) elInOrigCode.textContent = ret.origCode || 'PRG';
   if (elInOrigName) elInOrigName.textContent = ret.origName || 'Praga';
-  if (elInDepTime) elInDepTime.textContent = ret.depTime || '17:20';
-  if (elInDate) elInDate.textContent = ret.date || 'Lunes';
+  if (elInDepTime) elInDepTime.textContent = ret.depTime || '15:05';
+  if (elInDate) elInDate.textContent = ret.date || 'Domingo, 29 Nov';
   if (elInDestCode) elInDestCode.textContent = ret.destCode || 'MAD';
   if (elInDestName) elInDestName.textContent = ret.destName || 'Madrid';
-  if (elInArrTime) elInArrTime.textContent = ret.arrTime || '20:30';
-  if (elInSeats) elInSeats.textContent = ret.seats || 'Por asignar';
-  if (elInTerminal) elInTerminal.textContent = ret.terminal || 'T2 (Praga) → T1';
+  if (elInArrTime) elInArrTime.textContent = ret.arrTime || '18:10';
+  if (elInSeats) elInSeats.textContent = ret.seats || 'Gratis en Check-in';
+  if (elInTerminal) elInTerminal.textContent = ret.terminal || 'T2 (Praga) → T1 (Madrid)';
 
   const fTrans = document.getElementById('flight-trans-val');
-  if (fTrans) fTrans.textContent = f.transfer || 'Autobús 119 directo hasta metro Nádraží Veleslavín (Línea A verde, 15 min).';
+  if (fTrans) fTrans.textContent = f.transfer || 'Monovolumen grande privado reservado para los 7 a la llegada y a la salida de Praga.';
+
+  // Render Restaurants
+  const restosContainer = document.getElementById('restaurants-list-container');
+  if (restosContainer && appState.trip.restaurants) {
+    restosContainer.innerHTML = appState.trip.restaurants.map(r => `
+      <div class="res-card">
+        <div class="res-header">
+          <span class="res-title">🍽️ ${r.name}</span>
+          <span class="res-badge badge-resto">${r.day} • ${r.time}</span>
+        </div>
+        <div class="res-address">📍 ${r.address} (${r.meal})</div>
+        <div class="res-desc">${r.desc}</div>
+        <div class="res-actions">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.mapsQuery || (r.name + ' ' + r.address))}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Abrir en Maps
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Tours
+  const toursContainer = document.getElementById('tours-list-container');
+  if (toursContainer && appState.trip.tours) {
+    toursContainer.innerHTML = appState.trip.tours.map(t => `
+      <div class="res-card">
+        <div class="res-header">
+          <span class="res-title">🎟️ ${t.name}</span>
+          <span class="res-badge badge-tour">${t.day} • ${t.time}</span>
+        </div>
+        <div class="res-address">📍 ${t.address} (${t.duration})</div>
+        <div class="res-desc">${t.desc}</div>
+        <div class="res-notes">💡 ${t.notes}</div>
+        <div class="res-actions">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.mapsQuery || t.name)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-sm-primary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Abrir en Maps
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Transfers
+  const transContainer = document.getElementById('transfers-list-container');
+  if (transContainer && appState.trip.transfers) {
+    transContainer.innerHTML = appState.trip.transfers.map(tr => `
+      <div class="res-card">
+        <div class="res-header">
+          <span class="res-title">🚐 ${tr.title}</span>
+          <span class="res-badge badge-van">${tr.date} • ${tr.time}</span>
+        </div>
+        <div class="res-address">🛫 ${tr.origin} ➔ 📍 ${tr.destination}</div>
+        <div class="res-desc">${tr.desc}</div>
+      </div>
+    `).join('');
+  }
 }
 
 async function renderBoardingPasses() {
@@ -1411,7 +1797,10 @@ function shareCompleteTrip() {
   const out = f.outbound || {};
   const ret = f.inbound || {};
 
-  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA*\n\n🏨 *Hotel:* ${h.name}\n📍 ${h.address}\n📞 Tel: ${h.phone}\n🔖 Reserva Hotel: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🔖 Localizador PNR: ${f.bookingRef || 'ABC123'}\n🛫 Ida: ${out.flightNo || ''} (${out.origCode} → ${out.destCode}) ${out.date || ''} ${out.depTime || ''}\n🛬 Vuelta: ${ret.flightNo || ''} (${ret.origCode} → ${ret.destCode}) ${ret.date || ''} ${ret.depTime || ''}\n👥 Asientos: ${out.seats || 'Pendientes'}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
+  const restos = (appState.trip.restaurants || []).map(r => `• ${r.name}: ${r.day} a las ${r.time} (${r.address})`).join('\n');
+  const tours = (appState.trip.tours || []).map(t => `• ${t.name}: ${t.day} a las ${t.time}`).join('\n');
+
+  const text = `🏰 *NUESTRO VIAJE A PRAGA EN FAMILIA (25-29 NOV 2026)*\n\n🏨 *Alojamiento:* ${h.name}\n📍 ${h.address}\n📞 Tel / Coordinadora: ${h.phone || '+420 776 815 651'} (Ana Cristina)\n🔖 Reserva: ${h.bookingRef}\n\n✈️ *VUELOS RYANAIR*\n🛫 Ida: ${out.flightNo || 'FR2766'} (${out.origCode} 15:05 → ${out.destCode} 18:10) Mié 25 Nov\n🛬 Vuelta: ${ret.flightNo || 'FR3613'} (${ret.origCode} 15:05 → ${ret.destCode} 18:10) Dom 29 Nov\n👥 Asientos: ${out.seats || 'Gratis en check-in'}\n\n🚐 *TRASLADOS EN MONOVOLUMEN (7 Plazas):*\n• Ida: Aeropuerto PRG → Apartamento (Mié 25 a las 18:10)\n• Vuelta: Apartamento → Aeropuerto PRG (Dom 29 a las 12:00)\n\n🍽️ *RESTAURANTES RESERVADOS:*\n${restos}\n\n🎟️ *TOURS Y ENTRADAS RESERVADAS:*\n${tours}\n\n🚨 *Emergencias Praga:*\n112 (Emergencias UE) | +420 233 097 211 (Embajada España)`;
 
   if (navigator.share) {
     navigator.share({
@@ -1420,7 +1809,7 @@ function shareCompleteTrip() {
     }).catch(() => {});
   } else {
     navigator.clipboard.writeText(text);
-    showToast('¡Resumen de reservas copiado al portapapeles!');
+    showToast('¡Resumen completo copiado al portapapeles!');
   }
 }
 
