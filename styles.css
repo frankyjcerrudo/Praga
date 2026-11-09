@@ -249,9 +249,10 @@ body {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding: 4px 2px 14px 2px;
   margin-bottom: 16px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .day-selector::-webkit-scrollbar {
@@ -262,17 +263,22 @@ body {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-muted);
-  padding: 10px 18px;
-  border-radius: var(--radius-full);
+  padding: 8px 6px;
+  border-radius: var(--radius-md);
   font-size: 0.88rem;
   font-weight: 600;
-  white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 90px;
+  justify-content: center;
+  gap: 3px;
+  flex: 1 1 0;
+  min-width: 60px;
+  max-width: 84px;
+  flex-shrink: 0;
+  user-select: none;
 }
 
 .day-pill small {
@@ -281,11 +287,34 @@ body {
   opacity: 0.85;
 }
 
+.day-pill-date {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.day-pill-num {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .day-pill.active {
   background: linear-gradient(135deg, var(--accent-ruby), #be123c);
-  color: #fff;
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
+}
+
+.day-pill.active .day-pill-date {
+  color: #fff;
+}
+
+.day-pill.active .day-pill-num {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Day Meta Banner */
@@ -456,6 +485,7 @@ body {
   border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   text-decoration: none;
   cursor: pointer;
@@ -463,6 +493,8 @@ body {
   background: var(--bg-surface-elevated);
   color: var(--text-main);
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-sm:hover {
@@ -823,6 +855,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
@@ -1173,6 +1207,76 @@ dialog::backdrop {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+/* Flight PNR Header Card */
+.flight-pnr-box {
+  background: var(--bg-primary);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flight-pnr-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.flight-pnr-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.flight-pnr-lbl {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.flight-pnr-badge-val {
+  color: var(--accent-gold);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(245, 158, 11, 0.35);
+  display: inline-block;
+}
+
+.flight-pnr-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.flight-pnr-btns .btn-sm {
+  padding: 6px 12px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.flight-pnr-email-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 8px;
+  color: var(--text-muted);
 }
 
 .flight-route-card {
