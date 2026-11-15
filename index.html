@@ -704,16 +704,16 @@
       </div>
 
       <!-- Add item form -->
-      <form id="form-add-checklist" style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <input type="text" id="checklist-new-item" class="form-control" placeholder="Añadir a la maleta..." required style="flex: 1;">
-        <select id="checklist-new-cat" class="form-control" style="width: auto;">
+      <form id="form-add-checklist" class="checklist-add-form">
+        <input type="text" id="checklist-new-item" class="form-control" placeholder="Añadir a la maleta..." required>
+        <select id="checklist-new-cat" class="form-control">
           <option value="Documentos">📄 Docs</option>
           <option value="Salud">💊 Salud</option>
           <option value="Ropa">👟 Ropa</option>
           <option value="Tecnología">🔋 Tecno</option>
           <option value="Especial Niños" selected>🧸 Niños</option>
         </select>
-        <button type="submit" class="btn-sm btn-sm-primary" style="padding: 0 14px;">+</button>
+        <button type="submit" class="btn-sm btn-sm-primary checklist-add-btn" aria-label="Añadir a la maleta">+</button>
       </form>
 
       <!-- Checklist Items Container -->

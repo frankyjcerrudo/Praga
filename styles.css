@@ -974,6 +974,32 @@ body {
   transition: width 0.3s ease;
 }
 
+.checklist-add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.checklist-add-form input[type="text"] {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.checklist-add-form select {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.checklist-add-btn {
+  padding: 0 14px;
+  min-height: 40px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
 .checklist-group {
   margin-bottom: 18px;
 }
