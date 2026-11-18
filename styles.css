@@ -1570,6 +1570,46 @@ dialog::backdrop {
   margin-top: 6px;
 }
 
+.bp-meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.bp-meta-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.14);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+.bp-meta-pill.seat {
+  background: rgba(241, 196, 15, 0.16);
+  color: #fde047;
+  border-color: rgba(241, 196, 15, 0.35);
+}
+
+.bp-scanner-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bp-scanner-meta span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #073590;
+  border: 1px solid #bfdbfe;
+}
+
 /* ==========================================================================
    RESERVATIONS & BOOKINGS CARDS (RESTAURANTES, TOURS & TRASLADOS)
    ========================================================================== */

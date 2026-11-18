@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "User-Agent", "operation": "set", "value": "RyanAir/3.243.0 (Android)" },
+        { "header": "Origin", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||mntappbp.ryanair.com/",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

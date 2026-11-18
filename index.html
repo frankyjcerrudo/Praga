@@ -479,18 +479,23 @@
 
         <!-- SECCIÓN TARJETAS DE EMBARQUE OFFLINE -->
         <div style="padding-top: 14px; border-top: 1px solid var(--border-color);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
             <div>
               <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px;">
                 🎟️ Tarjetas de Embarque Offline
               </h4>
               <p style="font-size: 0.76rem; color: var(--text-muted);">
-                Guarda los QR o PDFs aquí. Disponibles en modo avión en el aeropuerto.
+                Guarda códigos Aztec de Ryanair (JSON/BCBP), QR o PDFs. Disponibles en modo avión.
               </p>
             </div>
-            <button id="btn-add-boarding-pass" class="btn-sm btn-sm-primary" style="padding: 6px 12px; white-space: nowrap;">
-              + Subir Tarjeta
-            </button>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button id="btn-import-ryanair" class="btn-sm" style="padding: 6px 10px; white-space: nowrap; background: rgba(7, 53, 144, 0.35); color: #fde047; border: 1px solid rgba(241, 196, 15, 0.4);">
+                📥 Importar Ryanair
+              </button>
+              <button id="btn-add-boarding-pass" class="btn-sm btn-sm-primary" style="padding: 6px 12px; white-space: nowrap;">
+                + Subir Tarjeta
+              </button>
+            </div>
           </div>
 
           <!-- Lista de Tarjetas de Embarque -->
@@ -978,6 +983,7 @@
       <div class="bp-scanner-card">
         <div id="view-bp-passenger" class="bp-scanner-passenger">Nombre Pasajero</div>
         <div id="view-bp-flight-info" class="bp-scanner-info">Vuelo Ryanair</div>
+        <div id="view-bp-meta" class="bp-scanner-meta"></div>
         
         <div id="view-bp-media-wrap" style="width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px;">
           <!-- Imagen o vista previa del PDF -->
@@ -994,6 +1000,36 @@
     </div>
   </dialog>
 
+  <!-- Modal: Importar Tarjetas Ryanair (JSON / IATA BCBP) -->
+  <dialog id="modal-import-ryanair">
+    <div class="modal-header">
+      <h3>📥 Importar Tarjetas Ryanair (Sin App)</h3>
+      <button class="icon-btn" onclick="document.getElementById('modal-import-ryanair').close()" aria-label="Cerrar">✕</button>
+    </div>
+    <form id="form-import-ryanair">
+      <div class="modal-body">
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+          Importa las tarjetas generadas con la extensión de Chrome o el script <code>fetch_passes.py</code> (las 7 a la vez), sin instalar la app oficial de Ryanair.
+        </p>
+
+        <div class="form-group">
+          <label for="ryanair-json-file">Opción A: Subir archivo <code>boarding-passes.json</code></label>
+          <input type="file" id="ryanair-json-file" class="form-control" accept=".json,application/json">
+        </div>
+
+        <div class="form-group">
+          <label for="ryanair-raw-input">Opción B: Pegar JSON o códigos IATA BCBP (uno por línea, empiezan por <code>M1...</code>)</label>
+          <textarea id="ryanair-raw-input" class="form-control" rows="5" placeholder='Pega aquí el contenido de boarding-passes.json o líneas M1CERRUDO/FRANCISCO...'></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-import-ryanair" class="btn-sm">Cancelar</button>
+        <button type="submit" class="btn-sm btn-sm-primary">Generar Códigos Aztec</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./vendor/bwip-js-min.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

@@ -1331,11 +1331,225 @@ async function dbDeletePass(id) {
 }
 
 // ==========================================================================
+// RYANAIR IATA BCBP DECODER & AZTEC GENERATOR (NO-RYANAIR-APP)
+// ==========================================================================
+function parseIataBcbp(barcode) {
+  if (typeof barcode !== 'string' || !barcode.startsWith('M') || barcode.length < 58) {
+    return null;
+  }
+  const rawName = barcode.slice(2, 22).trim();
+  const pnr = barcode.slice(23, 30).trim();
+  const origin = barcode.slice(30, 33).trim();
+  const destination = barcode.slice(33, 36).trim();
+  const carrier = barcode.slice(36, 39).trim();
+  const flightNum = barcode.slice(39, 44).trim();
+  const compartment = barcode.slice(47, 48).trim();
+  const seat = barcode.slice(48, 52).replace(/^0+/, '').trim();
+  const sequence = barcode.slice(52, 57).trim();
+
+  return {
+    rawName,
+    pnr,
+    origin,
+    destination,
+    flightNo: `${carrier}${flightNum}`.replace(/\s+/g, ''),
+    compartment,
+    seat,
+    sequence
+  };
+}
+
+function renderAztecDataUrl(barcode) {
+  if (typeof window.bwipjs === 'undefined') {
+    throw new Error('La librería bwip-js no está cargada.');
+  }
+  const canvas = document.createElement('canvas');
+  window.bwipjs.toCanvas(canvas, {
+    bcid: 'azteccode',
+    text: barcode,
+    scale: 8,
+    padding: 4
+  });
+  return canvas.toDataURL('image/png');
+}
+
+function normalizeTextForMatch(str) {
+  return (str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function matchFamilyPassenger(rawName) {
+  const clean = normalizeTextForMatch(rawName.replace('/', ' '));
+  if (!clean) return 'Familiar';
+
+  const passengers = (appState.trip && appState.trip.passengers) || [];
+  const tokens = clean.split(' ').filter(t => t.length >= 3);
+
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const p of passengers) {
+    const pNorm = normalizeTextForMatch(p.name);
+    let score = 0;
+    for (const tok of tokens) {
+      if (pNorm.includes(tok)) score++;
+    }
+    if (score > bestScore && score >= 2) {
+      bestScore = score;
+      bestMatch = p.name + (p.type === 'Bebé' ? ' (Bebé)' : '');
+    }
+  }
+
+  if (bestMatch) return bestMatch;
+
+  // Format LAST/FIRST -> First Last
+  if (rawName.includes('/')) {
+    const [last, first] = rawName.split('/');
+    return `${(first || '').trim()} ${(last || '').trim()}`.trim();
+  }
+  return rawName;
+}
+
+function normalizeRyanairPass(entry) {
+  let barcode = '';
+  let apiObj = null;
+
+  if (typeof entry === 'string') {
+    barcode = entry.trim();
+  } else if (entry && typeof entry === 'object' && entry.barcode) {
+    apiObj = entry;
+    barcode = String(entry.barcode).trim();
+  }
+
+  if (!barcode) return null;
+
+  const bcbp = parseIataBcbp(barcode);
+  const origin = (apiObj?.departure?.code || bcbp?.origin || '').toUpperCase();
+  const dest = (apiObj?.arrival?.code || bcbp?.destination || '').toUpperCase();
+  const route = origin && dest ? `${origin} → ${dest}` : '';
+
+  let flightType = 'Ida';
+  if (origin === 'PRG' || dest === 'MAD') {
+    flightType = 'Vuelta';
+  } else if (origin === 'MAD' || dest === 'PRG') {
+    flightType = 'Ida';
+  }
+
+  let rawPaxName = bcbp?.rawName || '';
+  if (apiObj?.passenger) {
+    if (typeof apiObj.passenger === 'string') {
+      rawPaxName = apiObj.passenger;
+    } else if (typeof apiObj.passenger === 'object') {
+      const fn = apiObj.passenger.firstName || '';
+      const ln = apiObj.passenger.lastName || '';
+      if (fn || ln) rawPaxName = `${ln}/${fn}`;
+    }
+  }
+
+  const passenger = matchFamilyPassenger(rawPaxName);
+  const seat = (apiObj?.seat?.designator || bcbp?.seat || '').trim();
+  const sequence = (apiObj?.sequence || bcbp?.sequence || '').toString().trim();
+  const pnr = (apiObj?.pnr || bcbp?.pnr || appState.trip?.flights?.bookingRef || 'B5Y4FQ').trim();
+  const flightNo = (apiObj?.flightNumber || bcbp?.flightNo || (flightType === 'Vuelta' ? 'FR3613' : 'FR2766')).replace(/\s+/g, '');
+
+  const dataUrl = renderAztecDataUrl(barcode);
+  const safePax = passenger.replace(/[^a-zA-Z0-9_-]+/g, '_');
+  const fileName = `${pnr}_${origin}${dest}${seat ? '_' + seat : ''}_${safePax}.png`;
+
+  return {
+    id: 'bp-aztec-' + btoa(unescape(encodeURIComponent(barcode.slice(0, 64)))).replace(/[^a-zA-Z0-9]/g, '').slice(0, 20) + '-' + Date.now().toString(36),
+    passenger,
+    flightType,
+    flightNo,
+    route,
+    seat,
+    sequence,
+    pnr,
+    barcode,
+    fileName,
+    fileType: 'image/png',
+    dataUrl,
+    source: 'ryanair-aztec',
+    dateAdded: new Date().toLocaleDateString('es-ES')
+  };
+}
+
+async function importRyanairEntries(entries) {
+  const existing = await dbGetAllPasses();
+  const existingBarcodes = new Set(existing.map(p => p.barcode).filter(Boolean));
+
+  let added = 0;
+  let skipped = 0;
+  const outSeats = [];
+  const inSeats = [];
+
+  for (const entry of entries) {
+    const norm = normalizeRyanairPass(entry);
+    if (!norm) continue;
+
+    if (norm.flightType === 'Ida' && norm.seat) outSeats.push(norm.seat);
+    if (norm.flightType === 'Vuelta' && norm.seat) inSeats.push(norm.seat);
+
+    if (existingBarcodes.has(norm.barcode)) {
+      skipped++;
+      continue;
+    }
+
+    await dbSavePass(norm);
+    existingBarcodes.add(norm.barcode);
+    added++;
+  }
+
+  // Actualizar resumen de asientos en la ficha de vuelos si hay asientos nuevos
+  let seatsUpdated = false;
+  if (outSeats.length > 0 && appState.trip?.flights?.outbound) {
+    appState.trip.flights.outbound.seats = [...new Set(outSeats)].join(', ');
+    seatsUpdated = true;
+  }
+  if (inSeats.length > 0 && appState.trip?.flights?.inbound) {
+    appState.trip.flights.inbound.seats = [...new Set(inSeats)].join(', ');
+    seatsUpdated = true;
+  }
+  if (seatsUpdated) {
+    saveState();
+    renderBookings();
+  }
+
+  if (added > 0) {
+    await renderBoardingPasses();
+  }
+  return { added, skipped };
+}
+
+async function syncSharedBoardingPasses() {
+  try {
+    const resp = await fetch('./boarding-passes.json', { cache: 'no-cache' });
+    if (!resp.ok) return;
+    const payload = await resp.json();
+    const list = Array.isArray(payload) ? payload : (payload?.passes || []);
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    const { added } = await importRyanairEntries(list);
+    if (added > 0) {
+      showToast(`✈️ Sincronizadas ${added} tarjetas de embarque`);
+    }
+  } catch (e) {
+    // Silencioso en modo offline si no hay tarjetas compartidas aún
+  }
+}
+
+// ==========================================================================
 // 4. RESERVAS & DOCUMENTOS TAB
 // ==========================================================================
 function initBookings() {
   renderBookings();
   renderBoardingPasses();
+  syncSharedBoardingPasses();
 
   // Hotel Modal
   const btnEditHotel = document.getElementById('btn-edit-hotel');
@@ -1527,6 +1741,74 @@ function initBookings() {
       reader.readAsDataURL(file);
     });
   }
+
+  // Ryanair JSON / BCBP Import Modal
+  const btnImportRyanair = document.getElementById('btn-import-ryanair');
+  const modalImportRyanair = document.getElementById('modal-import-ryanair');
+  const formImportRyanair = document.getElementById('form-import-ryanair');
+  const cancelImportBtn = document.getElementById('btn-cancel-import-ryanair');
+
+  if (btnImportRyanair && modalImportRyanair) {
+    btnImportRyanair.addEventListener('click', () => modalImportRyanair.showModal());
+  }
+
+  if (cancelImportBtn && modalImportRyanair) {
+    cancelImportBtn.addEventListener('click', () => modalImportRyanair.close());
+  }
+
+  if (formImportRyanair && modalImportRyanair) {
+    formImportRyanair.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('ryanair-json-file');
+      const rawTextarea = document.getElementById('ryanair-raw-input');
+
+      let rawText = (rawTextarea ? rawTextarea.value : '').trim();
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        rawText = await fileInput.files[0].text();
+      }
+
+      if (!rawText) {
+        alert('Selecciona el archivo boarding-passes.json o pega el JSON / códigos BCBP.');
+        return;
+      }
+
+      let entries = [];
+      try {
+        const parsed = JSON.parse(rawText);
+        if (Array.isArray(parsed)) {
+          entries = parsed;
+        } else if (parsed && Array.isArray(parsed.passes)) {
+          entries = parsed.passes;
+        } else if (parsed && parsed.barcode) {
+          entries = [parsed];
+        }
+      } catch (_jsonErr) {
+        // Fallback: líneas de texto con códigos IATA BCBP (M1...)
+        entries = rawText
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(line => line.startsWith('M') && line.length >= 58);
+      }
+
+      if (entries.length === 0) {
+        alert('No se encontraron tarjetas válidas en el JSON ni códigos BCBP (M1...).');
+        return;
+      }
+
+      try {
+        const { added, skipped } = await importRyanairEntries(entries);
+        modalImportRyanair.close();
+        formImportRyanair.reset();
+        if (added > 0) {
+          showToast(`🎟️ ¡${added} tarjetas Aztec generadas offline!`);
+        } else if (skipped > 0) {
+          showToast('Estas tarjetas ya estaban guardadas.');
+        }
+      } catch (err) {
+        alert('Error generando códigos Aztec: ' + (err.message || err));
+      }
+    });
+  }
 }
 
 function renderBookings() {
@@ -1696,7 +1978,13 @@ async function renderBoardingPasses() {
       const isPdf = pass.fileType === 'application/pdf';
       const previewThumb = isPdf
         ? `<div class="bp-pdf-icon">PDF</div>`
-        : `<img src="${pass.dataUrl}" alt="QR" class="bp-thumb">`;
+        : `<img src="${pass.dataUrl}" alt="Código de embarque" class="bp-thumb">`;
+
+      const metaBadges = [
+        pass.seat ? `<span class="bp-meta-pill seat">Asiento ${pass.seat}</span>` : '',
+        pass.flightNo ? `<span class="bp-meta-pill">${pass.flightNo}${pass.route ? ' • ' + pass.route : ''}</span>` : '',
+        pass.sequence ? `<span class="bp-meta-pill">Seq ${pass.sequence}</span>` : ''
+      ].filter(Boolean).join('');
 
       return `
         <div class="boarding-pass-item" data-id="${pass.id}">
@@ -1707,11 +1995,13 @@ async function renderBoardingPasses() {
             <span class="bp-flight-tag">${pass.flightType}</span>
           </div>
 
+          ${metaBadges ? `<div class="bp-meta-badges">${metaBadges}</div>` : ''}
+
           <div class="bp-preview-wrap" onclick="viewBoardingPass('${pass.id}')">
             ${previewThumb}
             <div style="display: flex; flex-direction: column; overflow: hidden;">
               <span style="font-size: 0.84rem; font-weight: 600; color: #fff; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">${pass.fileName}</span>
-              <span style="font-size: 0.72rem; color: var(--accent-emerald);">🟢 Guardado offline</span>
+              <span style="font-size: 0.72rem; color: var(--accent-emerald);">🟢 ${pass.source === 'ryanair-aztec' ? 'Aztec Ryanair offline' : 'Guardado offline'}</span>
             </div>
           </div>
 
@@ -1744,12 +2034,26 @@ window.viewBoardingPass = async function(id) {
     const title = document.getElementById('view-bp-title');
     const passenger = document.getElementById('view-bp-passenger');
     const flightInfo = document.getElementById('view-bp-flight-info');
+    const metaEl = document.getElementById('view-bp-meta');
     const mediaWrap = document.getElementById('view-bp-media-wrap');
     const downloadBtn = document.getElementById('btn-download-bp');
 
     if (title) title.textContent = `Tarjeta: ${pass.passenger}`;
     if (passenger) passenger.textContent = pass.passenger;
-    if (flightInfo) flightInfo.textContent = `Ryanair • ${pass.flightType}`;
+    if (flightInfo) {
+      const routeText = pass.flightNo
+        ? `${pass.flightNo}${pass.route ? ' (' + pass.route + ')' : ''}`
+        : `Ryanair • ${pass.flightType}`;
+      flightInfo.textContent = routeText;
+    }
+    if (metaEl) {
+      const pills = [
+        pass.seat ? `<span>Asiento: ${pass.seat}</span>` : '',
+        pass.sequence ? `<span>Seq: ${pass.sequence}</span>` : '',
+        pass.pnr ? `<span>PNR: ${pass.pnr}</span>` : ''
+      ].filter(Boolean).join('');
+      metaEl.innerHTML = pills;
+    }
     if (downloadBtn) {
       downloadBtn.href = pass.dataUrl;
       downloadBtn.download = pass.fileName;

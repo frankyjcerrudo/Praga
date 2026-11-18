@@ -1,12 +1,14 @@
 // Service Worker para 'Praga en Familia' - Funcionamiento 100% Offline
-const CACHE_NAME = 'praga-familia-v10';
+const CACHE_NAME = 'praga-familia-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './manifest.json',
-  './icons/icon.svg'
+  './icons/icon.svg',
+  './vendor/bwip-js-min.js',
+  './boarding-passes.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -34,6 +36,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // Solo procesar peticiones GET
   if (event.request.method !== 'GET') return;
+
+  // Network-first para boarding-passes.json para recibir nuevas tarjetas al instante
+  if (event.request.url.includes('boarding-passes.json')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
