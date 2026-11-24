@@ -1477,6 +1477,9 @@ function normalizeRyanairPass(entry) {
     (flightType === 'Vuelta' ? 'FR3613' : 'FR2766')
   ).replace(/\s+/g, '');
   const boardingTime = typeof apiObj?.boardingTime === 'string' ? apiObj.boardingTime.trim() : '';
+  const hasInfant = Boolean(apiObj?.hasInfant);
+  const doorVal = apiObj?.seat?.door;
+  const door = doorVal === 0 ? 'Puerta Delantera' : (doorVal === 1 ? 'Puerta Trasera' : '');
 
   const dataUrl = renderAztecDataUrl(barcode);
   const safePax = passenger.replace(/[^a-zA-Z0-9_-]+/g, '_');
@@ -1492,6 +1495,8 @@ function normalizeRyanairPass(entry) {
     seat,
     sequence,
     boardingTime,
+    hasInfant,
+    door,
     pnr,
     barcode,
     fileName,
@@ -1504,9 +1509,13 @@ function normalizeRyanairPass(entry) {
 
 async function importRyanairEntries(entries) {
   const existing = await dbGetAllPasses();
-  const existingBarcodes = new Set(existing.map(p => p.barcode).filter(Boolean));
+  const existingByBarcode = new Map();
+  for (const p of existing) {
+    if (p.barcode) existingByBarcode.set(p.barcode, p);
+  }
 
   let added = 0;
+  let updated = 0;
   let skipped = 0;
   const outSeats = [];
   const inSeats = [];
@@ -1520,13 +1529,26 @@ async function importRyanairEntries(entries) {
       if (norm.flightType === 'Vuelta') inSeats.push(norm.seat);
     }
 
-    if (existingBarcodes.has(norm.barcode)) {
-      skipped++;
+    const prev = existingByBarcode.get(norm.barcode);
+    if (prev) {
+      if (
+        prev.source === 'ryanair-aztec' &&
+        (
+          Boolean(prev.hasInfant) !== Boolean(norm.hasInfant) ||
+          (prev.door || '') !== (norm.door || '')
+        )
+      ) {
+        await dbSavePass({ ...norm, id: prev.id });
+        existingByBarcode.set(norm.barcode, { ...norm, id: prev.id });
+        updated++;
+      } else {
+        skipped++;
+      }
       continue;
     }
 
     await dbSavePass(norm);
-    existingBarcodes.add(norm.barcode);
+    existingByBarcode.set(norm.barcode, norm);
     added++;
   }
 
@@ -1545,7 +1567,7 @@ async function importRyanairEntries(entries) {
     renderBookings();
   }
 
-  if (added > 0) {
+  if (added > 0 || updated > 0) {
     await renderBoardingPasses();
   }
   return { added, skipped };
@@ -2007,6 +2029,8 @@ async function renderBoardingPasses() {
 
       const metaBadges = [
         pass.seat ? `<span class="bp-meta-pill seat">Asiento ${pass.seat}</span>` : '',
+        pass.hasInfant ? `<span class="bp-meta-pill seat">👶 Con bebé</span>` : '',
+        pass.door ? `<span class="bp-meta-pill">🚪 ${pass.door}</span>` : '',
         pass.flightNo ? `<span class="bp-meta-pill">${pass.flightNo}${pass.route ? ' • ' + pass.route : ''}</span>` : '',
         pass.sequence ? `<span class="bp-meta-pill">Seq ${pass.sequence}</span>` : ''
       ].filter(Boolean).join('');
@@ -2079,6 +2103,8 @@ window.viewBoardingPass = async function(id) {
       }
       const pills = [
         pass.seat ? `<span>Asiento: ${pass.seat}</span>` : '',
+        pass.hasInfant ? `<span>👶 Con bebé</span>` : '',
+        pass.door ? `<span>🚪 ${pass.door}</span>` : '',
         pass.sequence ? `<span>Seq: ${pass.sequence}</span>` : '',
         boardingClock ? `<span>Embarque: ${boardingClock}</span>` : '',
         pass.pnr ? `<span>PNR: ${pass.pnr}</span>` : ''

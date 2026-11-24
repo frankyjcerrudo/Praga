@@ -1,5 +1,439 @@
 {
   "pnr": "B5Y4FQ",
-  "generatedAt": null,
-  "passes": []
+  "generatedAt": "2026-11-24T18:06:51.171Z",
+  "passes": [
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_123_SIT",
+      "hash": "7dfc11dfabb6062c865e1fd6f3bd7a7806eb428752bdbdda327620eedf9fd7f8",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 0,
+      "paxType": "SIT",
+      "name": {
+        "title": "MR",
+        "first": "FRANCISCO JOSE",
+        "last": "CERRUDO"
+      },
+      "barcode": "M1CERRUDO/FRANCISCOJOS B5Y4FQ MADPRGFR 2766 329Y025A0123 349>5186W 6328BFR 04054651980012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "25A",
+        "location": "Window",
+        "paid": false,
+        "door": 1,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 123,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "hasInfant": true,
+      "authorizationStatus": "NONE"
+    },
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_124_SIT",
+      "hash": "d56b5bd341df96e431bd60fa2c909d1e4464a6f9b80a6475170b65b3f88a7262",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 1,
+      "paxType": "SIT",
+      "name": {
+        "title": "MRS",
+        "first": "AROA",
+        "last": "RODRIGUEZ GONZALEZ"
+      },
+      "barcode": "M1RODRIGUEZGONZALEZ/AR B5Y4FQ MADPRGFR 2766 329Y022F0124 349>5182W 6328BFR 04054651990012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "22F",
+        "location": "Window",
+        "paid": false,
+        "door": 1,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 124,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "authorizationStatus": "NONE"
+    },
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_119_SIT",
+      "hash": "aec1f58b297e5a366adf97dcd40c61fe8b224191b420810ed7e9cda4de95245e",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 2,
+      "paxType": "SIT",
+      "name": {
+        "title": "MR",
+        "first": "FRANCISCO JOSE",
+        "last": "CERRUDO ALONSO"
+      },
+      "barcode": "M1CERRUDOALONSO/FRANCI B5Y4FQ MADPRGFR 2766 329Y032A0119 349>5181W 6328BFR 04054641270012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "32A",
+        "location": "Window",
+        "paid": false,
+        "door": 1,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 119,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "authorizationStatus": "NONE"
+    },
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_120_SIT",
+      "hash": "5ae5aaa57f4a5f9ff8d41f5a0544c7743eceaf37ae5b6a1d5f2a55c85dedba99",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 3,
+      "paxType": "SIT",
+      "name": {
+        "title": "MRS",
+        "first": "ANA CRISTINA",
+        "last": "MENJIBAR GARCIA"
+      },
+      "barcode": "M1MENJIBARGARCIA/ANACR B5Y4FQ MADPRGFR 2766 329Y008F0120 349>5182W 6328BFR 04054641280012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "08F",
+        "location": "Window",
+        "paid": false,
+        "door": 0,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 120,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "authorizationStatus": "NONE"
+    },
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_125_SIT",
+      "hash": "048358d61d3967030ff34bdb21b87be87e944dd7ab9685e2409d2bb814db71a3",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 4,
+      "paxType": "SIT",
+      "name": {
+        "title": "MR",
+        "first": "ALVARO",
+        "last": "CERRUDO"
+      },
+      "barcode": "M1CERRUDO/ALVARO       B5Y4FQ MADPRGFR 2766 329Y012C0125 349>5181W 6328BFR 04054660410012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "12C",
+        "location": "Aisle",
+        "paid": false,
+        "door": 0,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 125,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "authorizationStatus": "NONE"
+    },
+    {
+      "passId": "B5Y4FQ_MADPRG_FR2766_126_SIT",
+      "hash": "41357a0caceb998e0ed85a9c18d0e076069363f15a105ee68550a0a4a35fc927",
+      "pnr": "B5Y4FQ",
+      "isConnectingFlight": false,
+      "paxNumber": 5,
+      "paxType": "SIT",
+      "name": {
+        "title": "MRS",
+        "first": "LORENA",
+        "last": "ABARCA"
+      },
+      "barcode": "M1ABARCA/LORENA        B5Y4FQ MADPRGFR 2766 329Y011D0126 349>5182W 6328BFR 04054660420012A0000000000000 0                          NN",
+      "departure": {
+        "code": "MAD",
+        "name": "Madrid",
+        "date": "2026-11-25T17:35:00",
+        "dateUTC": "2026-11-25T16:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795624500000
+      },
+      "arrival": {
+        "code": "PRG",
+        "name": "Prague",
+        "date": "2026-11-25T20:35:00",
+        "dateUTC": "2026-11-25T19:35:00Z",
+        "dateUTCOffset": "UTC+0100",
+        "epoch": 1795635300000
+      },
+      "ssrsDetails": [
+        {
+          "code": "BBBG",
+          "qty": 1
+        },
+        {
+          "code": "RS",
+          "qty": 1
+        },
+        {
+          "code": "JUMPSEAT",
+          "qty": 1
+        }
+      ],
+      "seat": {
+        "designator": "11D",
+        "location": "Aisle",
+        "paid": false,
+        "door": 0,
+        "isPrime": false
+      },
+      "priority": false,
+      "fast": false,
+      "leisurePlus": false,
+      "timeSaver": false,
+      "businessPlus": false,
+      "familyPlus": false,
+      "regular": false,
+      "sequence": 126,
+      "boardingTime": "2026-11-25T17:05:00",
+      "boardingTimeEpoch": 1795622700000,
+      "flight": {
+        "carrierCode": "FR",
+        "number": "2766",
+        "label": "FR2766",
+        "operatedBy": "Buzz"
+      },
+      "ticketType": "BlueTicket",
+      "discount": "",
+      "docNationality": "ES",
+      "docCountryOfIssue": "ES",
+      "authorizationStatus": "NONE"
+    }
+  ]
 }
