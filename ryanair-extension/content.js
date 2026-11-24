@@ -1,108 +1,169 @@
 "use strict";
 
-async function fingerprint() {
-  const { fp } = await chrome.storage.local.get("fp");
-  if (fp) return fp;
-  const bytes = crypto.getRandomValues(new Uint8Array(20));
-  const hex = [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
-  await chrome.storage.local.set({ fp: hex });
-  return hex;
-}
+if (!window.__pragaRyanairExtLoaded) {
+  window.__pragaRyanairExtLoaded = true;
 
-async function getToken(cid) {
-  const tr = await fetch(`/api/usrprof/v2/accounts/${cid}/sessionToken`, {
-    credentials: "include",
-    headers: { "Accept": "application/json", "client": "desktop", "client-version": "0.162.0 (desktop)" }
-  });
-  if (!tr.ok) throw new Error(`sessionToken ${tr.status}: inicia sesión en ryanair.com primero`);
-  return (await tr.json()).token;
-}
-
-async function resolveTrip() {
-  const m = location.pathname.match(/\/trip\/manage\/([0-9a-f-]{36})/i);
-  if (!m) throw new Error("No estás en la página de Gestionar Reserva (Manage Trip)");
-  const tripId = m[1];
-
-  const cid = sessionStorage.getItem("myRyanairID");
-  if (!cid) throw new Error("No has iniciado sesión (falta myRyanairID)");
-
-  const token = await getToken(cid);
-  const r = await fetch(`/api/orders/v2/orders/${cid}/trips/${tripId}`, {
-    credentials: "include",
-    headers: { "Accept": "application/json", "X-AUTH-TOKEN": token, "client": "desktop", "client-version": "0.162.0 (desktop)" }
-  });
-  if (!r.ok) throw new Error(`trip ${r.status}`);
-  const trip = await r.json();
-
-  const flights = trip.flights || [];
-  const bookingIds = [...new Set(flights.map(f => f.bookingId).filter(Boolean))];
-  if (bookingIds.length === 0) throw new Error("No se encontraron vuelos en esta reserva");
-
-  return { cid, bookingIds };
-}
-
-function passengerLabel(bp, idx) {
-  const pax = bp.passenger;
-  let raw = "";
-  if (pax && typeof pax === "object") {
-    raw = `${pax.firstName || ""}_${pax.lastName || ""}`.trim();
-  } else if (typeof pax === "string") {
-    raw = pax;
-  }
-  return (raw || `pax${idx + 1}`).replace(/[^a-zA-Z0-9_-]+/g, "_");
-}
-
-function fileName(bp, idx) {
-  const pnr  = bp.pnr || "PNR";
-  const dep  = bp.departure?.code || "";
-  const arr  = bp.arrival?.code || "";
-  const date = (bp.departure?.date || "").slice(0, 10).replace(/-/g, "");
-  const seat = (bp.seat?.designator || "").trim();
-  const pax  = passengerLabel(bp, idx);
-  return `${pnr}_${dep}${arr}_${date}${seat ? "_" + seat : ""}_${pax}.png`;
-}
-
-function renderDataUrl(barcode) {
-  const canvas = document.createElement("canvas");
-  bwipjs.toCanvas(canvas, { bcid: "azteccode", text: barcode, scale: 8, padding: 4 });
-  return canvas.toDataURL("image/png");
-}
-
-async function run() {
-  const { cid, bookingIds } = await resolveTrip();
-  const fp = await fingerprint();
-  const token = await getToken(cid);
-  const bp = await chrome.runtime.sendMessage({
-    type: "fetchBoardingPasses",
-    cid,
-    bookingIds,
-    token,
-    fp
-  });
-  if (!bp?.ok) throw new Error(bp?.reason || "Error al descargar tarjetas");
-
-  const validPasses = (bp.data || []).filter(item => item && item.barcode);
-  if (validPasses.length === 0) {
-    throw new Error("No hay códigos de barras todavía (¿has hecho ya el check-in?)");
-  }
-
-  const items = validPasses.map((pass, idx) => ({
-    filename: fileName(pass, idx),
-    dataUrl: renderDataUrl(pass.barcode)
-  }));
-
-  const jsonPayload = {
-    pnr: validPasses[0]?.pnr || "B5Y4FQ",
-    generatedAt: new Date().toISOString(),
-    passes: validPasses
+  const TOAST_COLORS = {
+    info: { bg: "#073590", border: "#3b82f6", text: "#ffffff" },
+    success: { bg: "#14532d", border: "#22c55e", text: "#ffffff" },
+    error: { bg: "#7f1d1d", border: "#ef4444", text: "#ffffff" }
   };
 
-  return { ok: true, items, jsonPayload };
-}
-
-chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
-  if (msg === "run") {
-    run().then(reply).catch(e => reply({ ok: false, reason: e.message || String(e) }));
-    return true;
+  function parseBcbpQuick(barcode) {
+    if (typeof barcode !== "string" || !barcode.startsWith("M") || barcode.length < 58) {
+      return {};
+    }
+    return {
+      rawName: barcode.slice(2, 22).trim(),
+      pnr: barcode.slice(23, 30).trim(),
+      origin: barcode.slice(30, 33).trim(),
+      destination: barcode.slice(33, 36).trim(),
+      flightNo: `${barcode.slice(36, 39).trim()}${barcode.slice(39, 44).trim()}`.replace(/\s+/g, ""),
+      seat: barcode.slice(48, 52).replace(/^0+/, "").trim()
+    };
   }
-});
+
+  function extractPnrFromPage() {
+    const text = document.body?.innerText || "";
+    const m = text.match(/(?:N[úu]mero de reserva|Reservation number|Booking reference)\s*:\s*([A-Z0-9]{6})/i);
+    return m ? m[1].toUpperCase() : null;
+  }
+
+  function passengerLabel(bp, bcbp, idx) {
+    let raw = "";
+    if (bp.name && typeof bp.name === "object") {
+      raw = `${bp.name.first || ""}_${bp.name.last || ""}`.trim();
+    } else if (bp.passenger && typeof bp.passenger === "object") {
+      raw = `${bp.passenger.firstName || ""}_${bp.passenger.lastName || ""}`.trim();
+    } else if (typeof bp.passenger === "string") {
+      raw = bp.passenger;
+    } else if (bcbp.rawName) {
+      raw = bcbp.rawName.replace("/", "_");
+    }
+    return (raw || `pax${idx + 1}`)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9_-]+/g, "_")
+      .replace(/^_+|_+$/g, "") || `pax${idx + 1}`;
+  }
+
+  function buildFileName(bp, idx) {
+    const bcbp = parseBcbpQuick(bp.barcode);
+    const pnr = bp.pnr || bcbp.pnr || "PNR";
+    const dep = bp.departure?.code || bcbp.origin || "";
+    const arr = bp.arrival?.code || bcbp.destination || "";
+    const date = (bp.departure?.date || "").slice(0, 10).replace(/-/g, "");
+    const flight = (bp.flight?.label || `${bp.flight?.carrierCode || ""}${bp.flight?.number || ""}` || bp.flightNumber || bcbp.flightNo || "").replace(/\s+/g, "");
+    const seat = (bp.seat?.designator || bcbp.seat || (bp.paxType === "INF" ? "INF" : "")).trim();
+    const pax = passengerLabel(bp, bcbp, idx);
+
+    return [
+      pnr,
+      dep && arr ? `${dep}${arr}` : (dep || arr),
+      flight,
+      date,
+      seat,
+      pax
+    ].filter(Boolean).join("_") + ".png";
+  }
+
+  function renderDataUrl(barcode) {
+    const canvas = document.createElement("canvas");
+    bwipjs.toCanvas(canvas, { bcid: "azteccode", text: barcode, scale: 8, padding: 4 });
+    return canvas.toDataURL("image/png");
+  }
+
+  function showToast(kind, text) {
+    const palette = TOAST_COLORS[kind] || TOAST_COLORS.info;
+    let el = document.getElementById("praga-ext-toast");
+
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "praga-ext-toast";
+      el.style.cssText = [
+        "position: fixed",
+        "top: 16px",
+        "right: 16px",
+        "z-index: 2147483647",
+        "max-width: 380px",
+        "padding: 12px 14px",
+        "border-radius: 10px",
+        "box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35)",
+        "font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+        "font-size: 13.5px",
+        "line-height: 1.4",
+        "font-weight: 600",
+        "display: flex",
+        "align-items: flex-start",
+        "gap: 10px"
+      ].join("; ");
+      document.documentElement.appendChild(el);
+    }
+
+    el.style.background = palette.bg;
+    el.style.border = `2px solid ${palette.border}`;
+    el.style.color = palette.text;
+    el.innerHTML = "";
+
+    const msgSpan = document.createElement("span");
+    msgSpan.style.flex = "1";
+    msgSpan.textContent = text;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.textContent = "✕";
+    closeBtn.setAttribute("aria-label", "Cerrar aviso");
+    closeBtn.style.cssText = [
+      "background: transparent",
+      "border: none",
+      "color: inherit",
+      "cursor: pointer",
+      "font-size: 14px",
+      "font-weight: 700",
+      "padding: 0 2px",
+      "line-height: 1",
+      "opacity: 0.85"
+    ].join("; ");
+    closeBtn.addEventListener("click", () => el.remove());
+
+    el.appendChild(msgSpan);
+    el.appendChild(closeBtn);
+  }
+
+  chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
+    if (msg?.type === "getPageContext") {
+      let cid = null;
+      try {
+        cid = sessionStorage.getItem("myRyanairID");
+      } catch {
+        cid = null;
+      }
+      reply({ cid, pnr: extractPnrFromPage() });
+      return false;
+    }
+
+    if (msg?.type === "renderAztecBatch") {
+      try {
+        const passes = Array.isArray(msg.passes) ? msg.passes : [];
+        const items = passes
+          .filter(bp => bp && typeof bp.barcode === "string" && bp.barcode.trim())
+          .map((bp, idx) => ({
+            filename: buildFileName(bp, idx),
+            dataUrl: renderDataUrl(bp.barcode.trim())
+          }));
+        reply({ ok: true, items });
+      } catch (err) {
+        reply({ ok: false, reason: err?.message || String(err) });
+      }
+      return false;
+    }
+
+    if (msg?.type === "showToast") {
+      showToast(msg.kind, msg.text || "");
+      reply({ ok: true });
+      return false;
+    }
+
+    return false;
+  });
+}

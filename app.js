@@ -1440,26 +1440,48 @@ function normalizeRyanairPass(entry) {
     flightType = 'Ida';
   }
 
-  let rawPaxName = bcbp?.rawName || '';
-  if (apiObj?.passenger) {
+  let rawPaxName = '';
+  if (apiObj?.name && typeof apiObj.name === 'object') {
+    const fn = (apiObj.name.first || '').trim();
+    const ln = (apiObj.name.last || '').trim();
+    if (fn || ln) rawPaxName = `${ln}/${fn}`;
+  } else if (apiObj?.passenger) {
     if (typeof apiObj.passenger === 'string') {
       rawPaxName = apiObj.passenger;
     } else if (typeof apiObj.passenger === 'object') {
-      const fn = apiObj.passenger.firstName || '';
-      const ln = apiObj.passenger.lastName || '';
+      const fn = (apiObj.passenger.firstName || '').trim();
+      const ln = (apiObj.passenger.lastName || '').trim();
       if (fn || ln) rawPaxName = `${ln}/${fn}`;
     }
   }
+  if (!rawPaxName) {
+    rawPaxName = bcbp?.rawName || '';
+  }
 
   const passenger = matchFamilyPassenger(rawPaxName);
-  const seat = (apiObj?.seat?.designator || bcbp?.seat || '').trim();
-  const sequence = (apiObj?.sequence || bcbp?.sequence || '').toString().trim();
+  const isInfant = apiObj?.paxType === 'INF';
+  let seat = (apiObj?.seat?.designator || bcbp?.seat || '').trim();
+  if (isInfant && !seat) {
+    seat = 'Bebé (regazo)';
+  }
+  const sequence = (apiObj?.sequence ?? bcbp?.sequence ?? '').toString().trim();
   const pnr = (apiObj?.pnr || bcbp?.pnr || appState.trip?.flights?.bookingRef || 'B5Y4FQ').trim();
-  const flightNo = (apiObj?.flightNumber || bcbp?.flightNo || (flightType === 'Vuelta' ? 'FR3613' : 'FR2766')).replace(/\s+/g, '');
+  const apiFlightLabel = (
+    apiObj?.flight?.label ||
+    `${apiObj?.flight?.carrierCode || ''}${apiObj?.flight?.number || ''}`
+  ).trim();
+  const flightNo = (
+    apiFlightLabel ||
+    apiObj?.flightNumber ||
+    bcbp?.flightNo ||
+    (flightType === 'Vuelta' ? 'FR3613' : 'FR2766')
+  ).replace(/\s+/g, '');
+  const boardingTime = typeof apiObj?.boardingTime === 'string' ? apiObj.boardingTime.trim() : '';
 
   const dataUrl = renderAztecDataUrl(barcode);
   const safePax = passenger.replace(/[^a-zA-Z0-9_-]+/g, '_');
-  const fileName = `${pnr}_${origin}${dest}${seat ? '_' + seat : ''}_${safePax}.png`;
+  const seatForFile = isInfant && seat === 'Bebé (regazo)' ? 'INF' : seat;
+  const fileName = `${pnr}_${origin}${dest}${seatForFile ? '_' + seatForFile : ''}_${safePax}.png`;
 
   return {
     id: 'bp-aztec-' + btoa(unescape(encodeURIComponent(barcode.slice(0, 64)))).replace(/[^a-zA-Z0-9]/g, '').slice(0, 20) + '-' + Date.now().toString(36),
@@ -1469,6 +1491,7 @@ function normalizeRyanairPass(entry) {
     route,
     seat,
     sequence,
+    boardingTime,
     pnr,
     barcode,
     fileName,
@@ -1492,8 +1515,10 @@ async function importRyanairEntries(entries) {
     const norm = normalizeRyanairPass(entry);
     if (!norm) continue;
 
-    if (norm.flightType === 'Ida' && norm.seat) outSeats.push(norm.seat);
-    if (norm.flightType === 'Vuelta' && norm.seat) inSeats.push(norm.seat);
+    if (/^\d+[A-Z]$/i.test(norm.seat)) {
+      if (norm.flightType === 'Ida') outSeats.push(norm.seat);
+      if (norm.flightType === 'Vuelta') inSeats.push(norm.seat);
+    }
 
     if (existingBarcodes.has(norm.barcode)) {
       skipped++;
@@ -2047,9 +2072,15 @@ window.viewBoardingPass = async function(id) {
       flightInfo.textContent = routeText;
     }
     if (metaEl) {
+      let boardingClock = '';
+      if (pass.boardingTime) {
+        const m = String(pass.boardingTime).match(/T(\d{2}:\d{2})/);
+        boardingClock = m ? m[1] : pass.boardingTime;
+      }
       const pills = [
         pass.seat ? `<span>Asiento: ${pass.seat}</span>` : '',
         pass.sequence ? `<span>Seq: ${pass.sequence}</span>` : '',
+        boardingClock ? `<span>Embarque: ${boardingClock}</span>` : '',
         pass.pnr ? `<span>PNR: ${pass.pnr}</span>` : ''
       ].filter(Boolean).join('');
       metaEl.innerHTML = pills;

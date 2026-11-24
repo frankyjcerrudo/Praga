@@ -1,26 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Praga Familia - Ryanair Boarding Passes",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Descarga las 7 tarjetas de embarque de Ryanair en PNG y JSON para la PWA de Praga en un clic.",
   "icons": { "128": "icon128.png" },
   "action": { "default_icon": "icon128.png", "default_title": "Descargar tarjetas Ryanair (Familia)" },
-  "permissions": ["storage", "downloads", "activeTab", "declarativeNetRequestWithHostAccess"],
+  "permissions": ["storage", "cookies", "downloads", "activeTab", "scripting"],
   "host_permissions": [
-    "https://www.ryanair.com/*",
-    "https://mntappbp.ryanair.com/*"
+    "https://*.ryanair.com/*",
+    "https://mntappbp.ryanair.com/*",
+    "https://services-api.ryanair.com/*"
   ],
   "background": { "service_worker": "background.js" },
   "content_scripts": [{
-    "matches": ["https://www.ryanair.com/*"],
+    "matches": ["https://*.ryanair.com/*"],
     "js": ["bwip-js-min.js", "content.js"],
     "run_at": "document_idle"
-  }],
-  "declarative_net_request": {
-    "rule_resources": [{
-      "id": "ua_rules",
-      "enabled": true,
-      "path": "rules.json"
-    }]
-  }
+  }]
 }

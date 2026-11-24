@@ -104,13 +104,22 @@ def render_pngs(passes: list, out_dir: pathlib.Path) -> None:
             pnr = bp.get("pnr", DEFAULT_PNR)
             dep = (bp.get("departure") or {}).get("code", "")
             arr = (bp.get("arrival") or {}).get("code", "")
-            pax = bp.get("passenger") or {}
-            if isinstance(pax, dict):
+            name_obj = bp.get("name")
+            pax = bp.get("passenger")
+            if isinstance(name_obj, dict):
+                name = f"{name_obj.get('first', '')}_{name_obj.get('last', '')}".strip("_")
+            elif isinstance(pax, dict):
                 name = f"{pax.get('firstName', '')}_{pax.get('lastName', '')}".strip("_")
-            else:
+            elif pax:
                 name = str(pax)
+            else:
+                name = ""
             safe_name = "".join(c if c.isalnum() or c in "-_" else "_" for c in name) or f"pax{idx}"
-            seat = ((bp.get("seat") or {}).get("designator") or "").strip()
+            seat_obj = bp.get("seat")
+            seat = (seat_obj.get("designator") if isinstance(seat_obj, dict) else "") or ""
+            seat = seat.strip()
+            if not seat and bp.get("paxType") == "INF":
+                seat = "INF"
             out_file = out_dir / f"{pnr}_{dep}{arr}_{seat}_{safe_name}.png"
 
             page.evaluate(
